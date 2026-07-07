@@ -1,3 +1,5 @@
+## REVISEN LAS CARPETAS Y ARCHIVOS ALLI ESTA LA INFO!! 
+
 Métodos a Elaborar
 1. Métodos para cálculo de raíces
     * Newton
