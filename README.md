@@ -4,13 +4,13 @@ Este proyecto contiene la implementación de diversos métodos numéricos con un
 
 ### Estructura del Proyecto
 
-El proyecto sigue una arquitectura limpia de separación de capas (Lógica y Vista):
+El proyecto sigue una arquitectura orientada a características (feature-oriented):
 
-*   **`src/logic/`**: Contiene la lógica matemática pura de cada método numérico (sin dependencias de interfaz).
-*   **`src/gui/app.py`**: Contenedor principal de la ventana y barra lateral de navegación.
-*   **`src/gui/theme.py`**: Definición del sistema de diseño (colores dinámicos y tipografías para modos Claro y Oscuro).
-*   **`src/gui/components/`**: Componentes gráficos reutilizables (como `MatrixGrid` para el ingreso de la matriz aumentado [A | b]).
-*   **`src/gui/views/`**: Formularios y visualización de resultados paso a paso para cada método.
+*   **`lib/`**: Lógica matemática pura de cada método numérico (sin dependencias de interfaz).
+*   **`gui/app.py`**: Contenedor principal de la ventana y barra lateral de navegación.
+*   **`gui/theme.py`**: Definición del sistema de diseño (colores dinámicos y tipografías para modos Claro y Oscuro).
+*   **`gui/components/`**: Componentes gráficos reutilizables (como `MatrixGrid` para el ingreso de la matriz aumentado [A | b]).
+*   **`gui/[método]/`**: Cada método numérico tiene su propia carpeta con su vista y componentes específicos.
 
 ### Métodos a Elaborar e Integrar
 

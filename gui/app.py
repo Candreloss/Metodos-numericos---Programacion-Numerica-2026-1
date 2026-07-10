@@ -1,5 +1,5 @@
 import customtkinter as ctk #pyright: ignore
-from gui.gauss_simple_view import GaussSimpleView
+from gui.gauss_simple.gauss_simple_view import GaussSimpleView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
