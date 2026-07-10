@@ -10,10 +10,7 @@ implementado en lib/lagrange_interpolation.py. Se cubren:
   - Verificación de la estructura de los pasos (steps) registrados para la GUI.
 
 Ejecutar desde la raíz del proyecto:
-    PYTHONPATH=. python lib/lagrange_interpolation_test.py
-
-Nota: PYTHONPATH=. es necesario porque el proyecto no usa __init__.py
-(los imports asumen que el CWD es la raíz del repositorio).
+    .venv/bin/python -m lib.lagrange_interpolation_test
 """
 import math
 from lib.lagrange_interpolation import LagrangeInterpolation

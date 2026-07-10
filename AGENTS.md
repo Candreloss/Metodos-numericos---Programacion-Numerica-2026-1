@@ -6,6 +6,10 @@
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python main.py
+
+Tests:
+```bash
+.venv/bin/python -m lib.lagrange_interpolation_test
 ```
 
 No test suite, no linter, no type checker, no CI. Verify changes by launching the GUI.
@@ -43,7 +47,7 @@ gui/
 
 ## Style
 
-- No `__init__.py` files anywhere — imports rely on CWD being the project root
+- Cada directorio (`lib/`, `gui/`, `gui/components/`, `gui/<method>/`) lleva `__init__.py` vacío (solo docstring) para que los imports absolutos `from lib.X import Y` funcionen via `python -m`. Los tests se ejecutan con `.venv/bin/python -m <modulo>.py` desde la raíz.
 - All UI strings, comments, and docstrings in Spanish
 - Colors defined as `(light_hex, dark_hex)` tuples in `theme.py`; use `ctk` appearance mode to switch
 - Fonts: Outfit (titles/sections), Inter (labels/UI), Consolas (monospace/code output)
