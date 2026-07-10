@@ -1,0 +1,15 @@
+a) Un solo segmento
+FUNCTION Trap (h, f0, f1)
+    Trap = h * (f0 + f1)/2
+END Trap
+
+
+b) Segmentos múltiples
+FUNCTION Trapm (h, n, f)
+    sum = f0
+    D0FOR i = 1, n – 1
+        sum = sum + 2 * fi
+    END DO
+    sum = sum + fn
+    Trapm = h * sum/2
+END Trapm

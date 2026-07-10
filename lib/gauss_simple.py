@@ -16,7 +16,6 @@ class GaussSimple:
         b: lista de tamaño n conteniendo los términos independientes.
         pivoting: booleano, indica si se usa pivoteo parcial.
         """
-        # Hacer una copia profunda para evitar modificar las listas originales
         self.A = copy.deepcopy(A)
         self.b = copy.deepcopy(b)
         self.pivoting = pivoting
@@ -105,7 +104,6 @@ class GaussSimple:
                     })
             else:
                 # Gauss Simple (Sin pivoteo)
-                # Verificar si el elemento pivote es cero o extremadamente cercano a cero
                 if abs(aug[k][k]) < 1e-12:
                     return {
                         "success": False,
@@ -118,11 +116,9 @@ class GaussSimple:
             for i in range(k + 1, n):
                 factor = aug[i][k] / aug[k][k]
                 
-                # Modificar los elementos de la fila i
                 for j in range(k, n + 1):
                     aug[i][j] = aug[i][j] - factor * aug[k][j]
                 
-                # Registrar el paso de eliminación para la fila i
                 self.steps.append({
                     "type": "elimination_row",
                     "matrix": copy.deepcopy(aug),

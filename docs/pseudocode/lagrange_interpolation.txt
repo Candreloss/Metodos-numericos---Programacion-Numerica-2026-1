@@ -1,0 +1,16 @@
+Seudocódigo para la interpolación de Lagrange. Este algoritmo se establece para calcular
+una sola predicción de grado n-ésimo, donde n + 1 es el número de datos.
+
+FUNCTION Lagrng(x, y, n, x)
+    sum = 0
+    DOFOR i = 0, n
+        product = yi
+        DOFOR j = 0, n
+            IF i != j THEN
+                product = product*(x – xj)/(xi – xj)
+            ENDIF
+        END DO
+        sum = sum + product
+    END DO
+    Lagrng = sum
+END Lagrng
