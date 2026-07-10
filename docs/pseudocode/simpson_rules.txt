@@ -1,0 +1,40 @@
+Seudocódigo para las reglas de Simpson. a) Regla de Simpson 1/3 para una sola aplicación, b) regla de Simpson 3/8
+para una sola aplicación, c) regla de Simpson 1/3 de aplicación múltiple, y d) regla de Simpson de aplicación
+múltiple para un número de segmentos tanto impares como pares. Observe que para todos los casos n debe ser ≥ 1.
+
+a)
+FUNCTI0N Simp13 (h, f0, f1, f2)
+    Simp13 = 2*h*(f0+4*f1+f2) / 6
+END Simp13
+b)
+FUNCTION Simp38 (h, f0, f1, f2, f3)
+    Simp38 = 3*h* (f0+3*(f1+f2)+f3) / 8
+END Simp38
+c)
+FUNCTION Simp13m (h,n,f)
+    sum = f(0)
+    DOFOR i = 1, n – 2, 2
+        sum = sum + 4 * fi + 2 * fi+1
+    END DO
+    sum = sum + 4 * fn–1 + fn
+    Simp13m = h * sum /3
+END Simp13m
+
+d)
+FUNCTION SimpInt(a,b,n,f)
+    h = (b – a) / n
+    IF n = 1 THEN
+        sum = Trap(h,f n–1 ,fn)
+    ELSE
+        m = n
+        odd = n / 2 – INT(n / 2)
+        IF odd > 0 AND n > 1 THEN
+            sum = sum + Simp38(h,fn–3,fn–2,fn–1,fn)
+            m = n – 3
+        END IF
+        IF m > 1 THEN
+            sum = sum + Simp13m(h,m,f)
+        END IF
+    END IF
+    SimpInt = sum
+END SimpInt
