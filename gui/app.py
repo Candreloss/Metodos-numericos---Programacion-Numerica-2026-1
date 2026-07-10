@@ -1,5 +1,7 @@
 import customtkinter as ctk #pyright: ignore
 from gui.gauss_simple.gauss_simple_view import GaussSimpleView
+from gui.lagrange_interpolation.lagrange_interpolation_view import LagrangeInterpolationView
+from gui.newton_interpolation.newton_interpolation_view import NewtonInterpolationView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -63,4 +65,16 @@ class GaussSimpleApp(ctk.CTk):
                 return
             self.current_view.destroy()
             self.current_view = GaussSimpleView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "lagrange_interpolation":
+            if isinstance(self.current_view, LagrangeInterpolationView):
+                return
+            self.current_view.destroy()
+            self.current_view = LagrangeInterpolationView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "newton_interpolation":
+            if isinstance(self.current_view, NewtonInterpolationView):
+                return
+            self.current_view.destroy()
+            self.current_view = NewtonInterpolationView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")

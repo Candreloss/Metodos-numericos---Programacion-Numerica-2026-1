@@ -24,7 +24,7 @@ class Sidebar(ctk.CTkFrame):
         self.title_font = get_title_font()
         self.label_font = get_label_font()
         
-        self.grid_rowconfigure(5, weight=1)
+        self.grid_rowconfigure(7, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         self.create_widgets()
@@ -71,6 +71,34 @@ class Sidebar(ctk.CTkFrame):
         )
         self.btn_gauss_simple.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
         
+        self.btn_lagrange = ctk.CTkButton(
+            self, 
+            text="      📈   Lagrange", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_lagrange_click
+        )
+        self.btn_lagrange.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
+        
+        self.btn_newton = ctk.CTkButton(
+            self, 
+            text="      📊   Newton", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_newton_click
+        )
+        self.btn_newton.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
+        
         self.btn_gauss_seidel = ctk.CTkButton(
             self, 
             text="      🔒   Gauss-Seidel (Prox.)", 
@@ -82,11 +110,11 @@ class Sidebar(ctk.CTkFrame):
             height=44,
             anchor="w"
         )
-        self.btn_gauss_seidel.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_gauss_seidel.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
         
         # Selector de Tema
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
-        theme_frame.grid(row=6, column=0, padx=24, pady=24, sticky="ew")
+        theme_frame.grid(row=8, column=0, padx=24, pady=24, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
@@ -131,11 +159,22 @@ class Sidebar(ctk.CTkFrame):
             ctk.set_appearance_mode("system")
 
     def on_gauss_simple_click(self):
-        # Si ya está activo, no hacer nada
         if self.active_method == "gauss_simple":
             return
-        
-        # Obtener ventana principal y cambiar vista
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("gauss_simple")
+
+    def on_lagrange_click(self):
+        if self.active_method == "lagrange_interpolation":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("lagrange_interpolation")
+
+    def on_newton_click(self):
+        if self.active_method == "newton_interpolation":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("newton_interpolation")
