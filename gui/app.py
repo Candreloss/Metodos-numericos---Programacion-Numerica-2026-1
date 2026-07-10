@@ -1,5 +1,5 @@
 import customtkinter as ctk #pyright: ignore
-from gui.views.gauss_simple_view import GaussSimpleView
+from gui.gauss_simple_view import GaussSimpleView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -83,9 +83,9 @@ class GaussSimpleApp(ctk.CTk):
         self.btn_gauss_simple = ctk.CTkButton(
             sidebar, 
             text="      📊   Gauss Simple", 
-            fg_color=COLOR_ACCENT, 
-            text_color=("#ffffff", "#06172E"),
-            hover_color=COLOR_ACCENT_HOVER,
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
             font=sidebar_font,
             corner_radius=0,
             height=44,

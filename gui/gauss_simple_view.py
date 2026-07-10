@@ -2,7 +2,7 @@ import customtkinter as ctk #pyright: ignore
 from tkinter import messagebox
 import numpy as np #pyright: ignore
 from logic.gauss_simple import GaussSimple
-from gui.components.matrix_grid import MatrixGrid
+from gui.matrix_grid import MatrixGrid
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
