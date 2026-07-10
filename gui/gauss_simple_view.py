@@ -3,6 +3,7 @@ from tkinter import messagebox
 import numpy as np #pyright: ignore
 from logic.gauss_simple import GaussSimple
 from gui.matrix_grid import MatrixGrid
+from gui.sidebar import Sidebar
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -24,8 +25,9 @@ class GaussSimpleView(ctk.CTkFrame):
         self.mono_font = get_mono_font()
         
         # Configurar rejilla principal
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=0) # Sidebar
+        self.grid_columnconfigure(1, weight=1) # Contenido de la vista
+        self.grid_rowconfigure(0, weight=1)
         
         self.create_layout()
         
@@ -33,8 +35,18 @@ class GaussSimpleView(ctk.CTkFrame):
         self.load_preset("Chapra_Ex")
 
     def create_layout(self):
-        # Cabecera de la sección
-        header_frame = ctk.CTkFrame(self, fg_color="transparent")
+        # 1. Instanciar la Barra Lateral Global
+        self.sidebar = Sidebar(self, active_method="gauss_simple")
+        self.sidebar.grid(row=0, column=0, sticky="nsew")
+        
+        # 2. Contenedor de contenido de la vista (con espaciados/márgenes)
+        self.view_container = ctk.CTkFrame(self, fg_color="transparent")
+        self.view_container.grid(row=0, column=1, sticky="nsew", padx=24, pady=24)
+        self.view_container.grid_columnconfigure(0, weight=1)
+        self.view_container.grid_rowconfigure(1, weight=1)
+        
+        # Cabecera de la sección (dentro de view_container)
+        header_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
         header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 20))
         header_frame.grid_columnconfigure(0, weight=1)
         
@@ -44,8 +56,8 @@ class GaussSimpleView(ctk.CTkFrame):
         method_desc = ctk.CTkLabel(header_frame, text="Resuelve sistemas de ecuaciones lineales Ax = b mediante eliminación hacia adelante y sustitución hacia atrás.", font=self.label_font, text_color=COLOR_MUTED)
         method_desc.grid(row=1, column=0, sticky="w", pady=(4, 0))
         
-        # Contenido Dividido en dos paneles: Entrada (Izquierda) y Resultados (Derecha)
-        content_frame = ctk.CTkFrame(self, fg_color="transparent")
+        # Contenido Dividido en dos paneles (dentro de view_container)
+        content_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
         content_frame.grid(row=1, column=0, sticky="nsew")
         content_frame.grid_columnconfigure(0, weight=6) # Panel de entrada
         content_frame.grid_columnconfigure(1, weight=5) # Panel de resultados
