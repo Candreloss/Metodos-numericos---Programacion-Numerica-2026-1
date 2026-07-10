@@ -1,4 +1,4 @@
-import customtkinter as ctk
+import customtkinter as ctk #pyright: ignore
 from gui.views.gauss_simple_view import GaussSimpleView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
@@ -17,9 +17,19 @@ class GaussSimpleApp(ctk.CTk):
         # Apariencia por defecto
         ctk.set_appearance_mode("dark")
         
-        # Configurar ventana principal
+        # Configurar ventana principal y centrado en pantalla
         self.title("Métodos Numéricos - Eliminación Gaussiana")
-        self.geometry("1100x750")
+        
+        width = 1200
+        height = 650
+        
+        # Calcular posición central basada en las dimensiones de la pantalla
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        self.geometry(f"{width}x{height}+{x}+{y}")
         self.minsize(1000, 650)
         self.configure(fg_color=COLOR_BG)
         
@@ -43,16 +53,16 @@ class GaussSimpleApp(ctk.CTk):
         sidebar.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
         sidebar.grid_rowconfigure(5, weight=1)
         
-        # Título del software
+        # Título del software (Centrado horizontalmente en la barra lateral)
         title_label = ctk.CTkLabel(
             sidebar, 
             text="Programación\nNumérica", 
             font=self.title_font, 
             text_color=COLOR_LIGHT_CYAN,
-            justify="left",
-            anchor="w"
+            justify="center",
+            anchor="center"
         )
-        title_label.grid(row=0, column=0, padx=24, pady=(35, 25), sticky="w")
+        title_label.grid(row=0, column=0, padx=24, pady=(35, 25), sticky="ew")
         
         # Separador muy delgado
         sep = ctk.CTkFrame(sidebar, height=1, fg_color=COLOR_BORDER)
@@ -67,44 +77,46 @@ class GaussSimpleApp(ctk.CTk):
         )
         method_title.grid(row=2, column=0, padx=24, pady=(25, 12), sticky="w")
         
-        # Menú de Métodos
+        # Menú de Métodos (Botones expandidos de borde a borde, con corner_radius=0 y altura de 44px)
+        sidebar_font = ctk.CTkFont(family="Inter", size=13, weight="bold")
+        
         self.btn_gauss_simple = ctk.CTkButton(
             sidebar, 
-            text="Gauss Simple", 
+            text="      📊   Gauss Simple", 
             fg_color=COLOR_ACCENT, 
-            text_color=COLOR_BG,
+            text_color=("#ffffff", "#06172E"),
             hover_color=COLOR_ACCENT_HOVER,
-            font=self.label_font,
-            corner_radius=8,
-            height=36,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
             anchor="w"
         )
-        self.btn_gauss_simple.grid(row=3, column=0, padx=16, pady=4, sticky="ew")
+        self.btn_gauss_simple.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
         
         self.btn_gauss_seidel = ctk.CTkButton(
             sidebar, 
-            text="Gauss-Seidel (Prox.)", 
+            text="      🔒   Gauss-Seidel (Prox.)", 
             fg_color="transparent", 
             text_color=COLOR_MUTED,
             state="disabled",
-            font=self.label_font,
-            corner_radius=8,
-            height=36,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
             anchor="w"
         )
-        self.btn_gauss_seidel.grid(row=4, column=0, padx=16, pady=4, sticky="ew")
+        self.btn_gauss_seidel.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
         
-        # Selector de Tema
+        # Selector de Tema (Rediseñado según la referencia visual)
         theme_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
         theme_frame.grid(row=6, column=0, padx=24, pady=24, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
-            text="APARIENCIA", 
-            font=ctk.CTkFont(family="Inter", size=10, weight="bold"), 
-            text_color=COLOR_MUTED
+            text="🎨  Tema", 
+            font=sidebar_font, 
+            text_color=COLOR_TEXT
         )
-        theme_lbl.pack(anchor="w", pady=(0, 6))
+        theme_lbl.pack(anchor="w", pady=(0, 10))
         
         self.theme_menu = ctk.CTkOptionMenu(
             theme_frame,
@@ -116,9 +128,10 @@ class GaussSimpleApp(ctk.CTk):
             dropdown_fg_color=COLOR_PANEL,
             dropdown_hover_color=COLOR_BORDER,
             dropdown_text_color=COLOR_TEXT,
+            text_color=COLOR_TEXT,
             font=self.label_font,
             corner_radius=8,
-            height=32
+            height=36
         )
         self.theme_menu.pack(fill="x")
         self.theme_menu.set("Oscuro")

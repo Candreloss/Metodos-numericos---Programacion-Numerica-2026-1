@@ -1,4 +1,4 @@
-import customtkinter as ctk
+import customtkinter as ctk #pyright: ignore
 from gui.theme import (
     COLOR_BG, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_LIGHT_CYAN, COLOR_MUTED, COLOR_TEXT,
@@ -11,54 +11,66 @@ class MatrixGrid(ctk.CTkScrollableFrame):
     de la matriz aumentada [A | b] del sistema de ecuaciones.
     """
     def __init__(self, master, **kwargs):
-        super().__init__(master, fg_color="transparent", **kwargs)
+        super().__init__(
+            master, 
+            fg_color="transparent", 
+            scrollbar_fg_color="transparent",
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT,
+            **kwargs
+        )
         self.label_font = get_label_font()
         self.mono_font = get_mono_font()
         self.entry_A = []
         self.entry_b = []
         self.n_value = 3
+        
+        # Configurar la columna principal para centrar el contenido
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.grid_frame.grid(row=0, column=0, sticky="n")
 
     def update_grid(self, n):
         self.n_value = n
         
-        # Limpiar widgets previos
-        for widget in self.winfo_children():
+        # Limpiar únicamente los widgets dentro del contenedor central
+        for widget in self.grid_frame.winfo_children():
             widget.destroy()
             
         self.entry_A = []
         self.entry_b = []
         
-        # Crear etiquetas de cabecera de columna
+        # Crear etiquetas de cabecera de columna (Alineadas sobre sus respectivas cajas de texto)
         for j in range(n):
             col_lbl = ctk.CTkLabel(
-                self, 
+                self.grid_frame, 
                 text=f"Columna {j+1}", 
                 font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
                 text_color=COLOR_LIGHT_CYAN
             )
-            col_lbl.grid(row=0, column=2*j, padx=2, pady=5)
+            col_lbl.grid(row=0, column=2*j + 1, padx=2, pady=5)
             
         col_b_lbl = ctk.CTkLabel(
-            self, 
+            self.grid_frame, 
             text="Vector b", 
             font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
             text_color=COLOR_ACCENT
         )
-        col_b_lbl.grid(row=0, column=2*n, padx=5, pady=5)
+        col_b_lbl.grid(row=0, column=2*n + 1, padx=5, pady=5)
         
         # Generar filas de inputs
         for i in range(n):
             row_A = []
             
             # Etiqueta indicadora de fila
-            row_lbl = ctk.CTkLabel(self, text=f"F{i+1}: ", font=self.label_font, text_color=COLOR_MUTED)
-            row_lbl.grid(row=i+1, column=0, padx=(0, 5), pady=3)
+            row_lbl = ctk.CTkLabel(self.grid_frame, text=f"F{i+1}: ", font=self.label_font, text_color=COLOR_MUTED)
+            row_lbl.grid(row=i+1, column=0, padx=(0, 3), pady=3)
             
             for j in range(n):
                 # Campo de texto para A[i][j] (con estilos redondeados)
                 entry = ctk.CTkEntry(
-                    self, 
-                    width=65, 
+                    self.grid_frame, 
+                    width=55, 
                     fg_color=COLOR_BG, 
                     border_color=COLOR_INTERACTIVE_BORDER, 
                     text_color=COLOR_TEXT,
@@ -69,20 +81,20 @@ class MatrixGrid(ctk.CTkScrollableFrame):
                 )
                 
                 # Layout
-                entry.grid(row=i+1, column=2*j + 1, padx=3, pady=4)
+                entry.grid(row=i+1, column=2*j + 1, padx=2, pady=4)
                 row_A.append(entry)
                 
                 # Símbolos matemáticos para guiar al usuario
                 if j < n - 1:
-                    sym = ctk.CTkLabel(self, text=f"x{j+1} +", font=self.label_font, text_color=COLOR_MUTED)
+                    sym = ctk.CTkLabel(self.grid_frame, text=f"x{j+1} +", font=self.label_font, text_color=COLOR_MUTED)
                 else:
-                    sym = ctk.CTkLabel(self, text=f"x{j+1} =", font=self.label_font, text_color=COLOR_LIGHT_CYAN)
-                sym.grid(row=i+1, column=2*j + 2, padx=2, pady=3)
+                    sym = ctk.CTkLabel(self.grid_frame, text=f"x{j+1} =", font=self.label_font, text_color=COLOR_LIGHT_CYAN)
+                sym.grid(row=i+1, column=2*j + 2, padx=1, pady=3)
                 
             # Campo de texto para b[i] (borde de color acento para destacar)
             entry_b_i = ctk.CTkEntry(
-                self, 
-                width=65, 
+                self.grid_frame, 
+                width=55, 
                 fg_color=COLOR_BG, 
                 border_color=COLOR_ACCENT, 
                 text_color=COLOR_TEXT,
@@ -91,7 +103,7 @@ class MatrixGrid(ctk.CTkScrollableFrame):
                 corner_radius=6,
                 border_width=1
             )
-            entry_b_i.grid(row=i+1, column=2*n + 1, padx=(5, 5), pady=4)
+            entry_b_i.grid(row=i+1, column=2*n + 1, padx=(4, 4), pady=4)
             
             self.entry_A.append(row_A)
             self.entry_b.append(entry_b_i)

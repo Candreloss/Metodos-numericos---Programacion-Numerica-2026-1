@@ -70,7 +70,7 @@ class GaussSimpleView(ctk.CTkFrame):
         self.n_combo = ctk.CTkComboBox(
             config_frame, 
             values=["2", "3", "4", "5", "6", "7"], 
-            width=70, 
+            width=120,
             command=self.on_n_changed,
             fg_color=COLOR_BG,
             border_color=COLOR_INTERACTIVE_BORDER,
@@ -79,11 +79,12 @@ class GaussSimpleView(ctk.CTkFrame):
             dropdown_fg_color=COLOR_PANEL,
             dropdown_hover_color=COLOR_BORDER,
             dropdown_text_color=COLOR_TEXT,
+            text_color=COLOR_TEXT,
             font=self.label_font,
             corner_radius=8
         )
         self.n_combo.set("3")
-        self.n_combo.grid(row=0, column=1, sticky="w", padx=(0, 20), pady=(0, 10))
+        self.n_combo.grid(row=0, column=1, sticky="ew", padx=(0, 20), pady=(0, 10))
         
         dec_label = ctk.CTkLabel(config_frame, text="Decimales:", font=self.label_font, text_color=COLOR_TEXT)
         dec_label.grid(row=0, column=2, sticky="w", padx=(0, 8), pady=(0, 10))
@@ -91,7 +92,7 @@ class GaussSimpleView(ctk.CTkFrame):
         self.dec_combo = ctk.CTkComboBox(
             config_frame, 
             values=["2", "4", "6", "8"], 
-            width=70,
+            width=120,
             fg_color=COLOR_BG,
             border_color=COLOR_INTERACTIVE_BORDER,
             button_color=COLOR_INTERACTIVE_BORDER,
@@ -99,11 +100,12 @@ class GaussSimpleView(ctk.CTkFrame):
             dropdown_fg_color=COLOR_PANEL,
             dropdown_hover_color=COLOR_BORDER,
             dropdown_text_color=COLOR_TEXT,
+            text_color=COLOR_TEXT,
             font=self.label_font,
             corner_radius=8
         )
         self.dec_combo.set("4")
-        self.dec_combo.grid(row=0, column=3, sticky="w", pady=(0, 10))
+        self.dec_combo.grid(row=0, column=3, sticky="ew", pady=(0, 10))
         
         # Fila 1: Ejemplos (Presets) - Expansión completa usando columnspan
         preset_label = ctk.CTkLabel(config_frame, text="Ejemplos:", font=self.label_font, text_color=COLOR_TEXT)
@@ -121,6 +123,7 @@ class GaussSimpleView(ctk.CTkFrame):
             dropdown_fg_color=COLOR_PANEL,
             dropdown_hover_color=COLOR_BORDER,
             dropdown_text_color=COLOR_TEXT,
+            text_color=COLOR_TEXT,
             font=self.label_font,
             corner_radius=8
         )
@@ -144,10 +147,10 @@ class GaussSimpleView(ctk.CTkFrame):
         
         # 3. Contenedor de la Matriz [A | b]
         matrix_header = ctk.CTkLabel(self.left_panel, text="Ingrese los coeficientes del sistema [A | b]:", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
-        matrix_header.grid(row=2, column=0, sticky="w", padx=20, pady=(10, 8))
+        matrix_header.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 8))
         
         self.matrix_grid = MatrixGrid(self.left_panel)
-        self.matrix_grid.grid(row=3, column=0, sticky="nsew", padx=20, pady=(0, 20))
+        self.matrix_grid.grid(row=3, column=0, sticky="nsew", padx=(10, 10), pady=(0, 20))
         
         # 4. Botones de Acción inferiores
         actions_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
@@ -189,13 +192,12 @@ class GaussSimpleView(ctk.CTkFrame):
         self.right_panel.grid_columnconfigure(0, weight=1)
         self.right_panel.grid_rowconfigure(1, weight=1)
         
-        # Pestañas de Resultados
         self.result_tabs = ctk.CTkTabview(
             self.right_panel, 
             fg_color=COLOR_PANEL, 
             segmented_button_fg_color=COLOR_BG,
-            segmented_button_selected_color=COLOR_ACCENT,
-            segmented_button_selected_hover_color=COLOR_ACCENT_HOVER,
+            segmented_button_selected_color=("#58A1D3", "#0F4C81"),
+            segmented_button_selected_hover_color=("#3e87b7", "#0b3a63"),
             segmented_button_unselected_color=COLOR_BG,
             segmented_button_unselected_hover_color=COLOR_BORDER,
             text_color=COLOR_TEXT,
@@ -227,7 +229,9 @@ class GaussSimpleView(ctk.CTkFrame):
             text_color=COLOR_TEXT, 
             border_color=COLOR_BORDER, 
             border_width=1,
-            corner_radius=8
+            corner_radius=8,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_solution.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
         self.txt_solution.insert("1.0", "Ingrese los datos del sistema y presione 'Resolver'.")
@@ -247,7 +251,9 @@ class GaussSimpleView(ctk.CTkFrame):
             text_color=COLOR_TEXT, 
             border_color=COLOR_BORDER, 
             border_width=1,
-            corner_radius=8
+            corner_radius=8,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_steps.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
         self.txt_steps.insert("1.0", "Aquí se mostrará el paso a paso del método:\n1. Estados de la matriz aumentada.\n2. Pivoteo parcial si se realiza.\n3. Multiplicadores y operaciones por fila.\n4. Fórmulas de la sustitución hacia atrás.")
@@ -267,7 +273,9 @@ class GaussSimpleView(ctk.CTkFrame):
             text_color=COLOR_TEXT, 
             border_color=COLOR_BORDER, 
             border_width=1,
-            corner_radius=8
+            corner_radius=8,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_validation.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
         self.txt_validation.insert("1.0", "Comprobación del error residual (r = b - A·x) para certificar la precisión del método.")
