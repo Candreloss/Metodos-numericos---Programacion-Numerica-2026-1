@@ -77,13 +77,12 @@ class Sidebar(ctk.CTkFrame):
             self, 
             text="      📐   Método de Bisección", 
             fg_color="transparent", 
-            text_color=COLOR_MUTED,
+            text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
             font=sidebar_font,
             corner_radius=0,
             height=44,
             anchor="w",
-            state="disabled",
             command=self.on_bisection_click
         )
         self.btn_bisection.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
