@@ -184,13 +184,12 @@ class Sidebar(ctk.CTkFrame):
             self, 
             text="      📐   Regla del Trapecio", 
             fg_color="transparent", 
-            text_color=COLOR_MUTED,
+            text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
             font=sidebar_font,
             corner_radius=0,
             height=44,
             anchor="w",
-            state="disabled",
             command=self.on_trapezoidal_click
         )
         self.btn_trapezoidal.grid(row=12, column=0, padx=0, pady=2, sticky="ew")

@@ -131,6 +131,9 @@ cython_debug/
 .DS_Store
 Thumbs.db
 
+#AI
+.opencode/
+openspec/
 
 # misc
 docs/analisis_numerico_las_matematicas_del_calculo_cientifico_kincaid1.pdf
