@@ -221,12 +221,13 @@ class LagrangeInterpolation:
             # Fin del cálculo de la base i: product = y_i * L_i(eval_point).
             # li_value aísla L_i(eval_point) dividiendo product por y_i
             # (salvo cuando y_i = 0, en cuyo caso L_i es 0 por convención).
+            li_value = float(product) / float(self.y[i]) if float(self.y[i]) != 0 else 0.0
             self.steps.append({
                 "type": "basis_end",
                 "i": i,
-                "li_value": float(product) / float(self.y[i]) if float(self.y[i]) != 0 else 0.0,
+                "li_value": li_value,
                 "product_value": product,
-                "description": f"L_{i}({self.eval_point}) = {float(product) / float(self.y[i]):.6g} | y_{i} · L_{i} = {product:.6g}"
+                "description": f"L_{i}({self.eval_point}) = {li_value:.6g} | y_{i} · L_{i} = {product:.6g}"
             })
             # Acumular el término en la suma total.
             sum_val += product
