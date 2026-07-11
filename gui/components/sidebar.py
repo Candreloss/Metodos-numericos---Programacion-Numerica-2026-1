@@ -24,7 +24,8 @@ class Sidebar(ctk.CTkFrame):
         self.title_font = get_title_font()
         self.label_font = get_label_font()
         
-        self.grid_rowconfigure(7, weight=1)
+        # Ajustamos el peso de la fila 9 (espacio vacío) para empujar el selector de tema hacia abajo
+        self.grid_rowconfigure(9, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         self.create_widgets()
@@ -85,9 +86,9 @@ class Sidebar(ctk.CTkFrame):
         )
         self.btn_lagrange.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
         
-        self.btn_newton = ctk.CTkButton(
+        self.btn_newton_interp = ctk.CTkButton(
             self, 
-            text="      📊   Newton", 
+            text="      📈   Newton (Interp.)", 
             fg_color="transparent", 
             text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
@@ -95,9 +96,39 @@ class Sidebar(ctk.CTkFrame):
             corner_radius=0,
             height=44,
             anchor="w",
-            command=self.on_newton_click
+            command=self.on_newton_interp_click
         )
-        self.btn_newton.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_newton_interp.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
+
+        # --- NUEVOS MÉTODOS DE RAÍCES ---
+        self.btn_newton_roots = ctk.CTkButton(
+            self, 
+            text="      📐   Newton (Raíces)", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_newton_roots_click
+        )
+        self.btn_newton_roots.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
+
+        self.btn_secant_roots = ctk.CTkButton(
+            self, 
+            text="      📐   Secante (Raíces)", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_secant_click
+        )
+        self.btn_secant_roots.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
+        # --------------------------------
         
         self.btn_gauss_seidel = ctk.CTkButton(
             self, 
@@ -110,11 +141,11 @@ class Sidebar(ctk.CTkFrame):
             height=44,
             anchor="w"
         )
-        self.btn_gauss_seidel.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_gauss_seidel.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
         
-        # Selector de Tema
+        # Selector de Tema (Ahora en la fila 10 por el espaciado)
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
-        theme_frame.grid(row=8, column=0, padx=24, pady=24, sticky="ew")
+        theme_frame.grid(row=10, column=0, padx=24, pady=24, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
@@ -158,6 +189,7 @@ class Sidebar(ctk.CTkFrame):
         else:
             ctk.set_appearance_mode("system")
 
+    # --- EVENTOS DE RUTEO ---
     def on_gauss_simple_click(self):
         if self.active_method == "gauss_simple":
             return
@@ -172,9 +204,23 @@ class Sidebar(ctk.CTkFrame):
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("lagrange_interpolation")
 
-    def on_newton_click(self):
+    def on_newton_interp_click(self):
         if self.active_method == "newton_interpolation":
             return
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("newton_interpolation")
+
+    def on_newton_roots_click(self):
+        if self.active_method == "newton_roots":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("newton_roots")
+
+    def on_secant_click(self):
+        if self.active_method == "secant_roots":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("secant_roots")
