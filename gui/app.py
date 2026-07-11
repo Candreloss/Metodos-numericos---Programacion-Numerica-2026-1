@@ -2,6 +2,11 @@ import customtkinter as ctk #pyright: ignore
 from gui.gauss_simple.gauss_simple_view import GaussSimpleView
 from gui.lagrange_interpolation.lagrange_interpolation_view import LagrangeInterpolationView
 from gui.newton_interpolation.newton_interpolation_view import NewtonInterpolationView
+from gui.newton_method.newton_method_view import NewtonMethodView
+from gui.bisection_method.bisection_method_view import BisectionMethodView
+from gui.secant_method.secant_method_view import SecantMethodView
+from gui.gauss_seidel.gauss_seidel_view import GaussSeidelView
+from gui.trapezoidal_rule.trapezoidal_rule_view import TrapezoidalRuleView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -20,7 +25,7 @@ class GaussSimpleApp(ctk.CTk):
         ctk.set_appearance_mode("dark")
         
         # Configurar ventana principal y centrado en pantalla
-        self.title("Métodos Numéricos - Eliminación Gaussiana")
+        self.title("Métodos Numéricos - Programación Numérica")
         
         width = 1200
         height = 650
@@ -77,4 +82,34 @@ class GaussSimpleApp(ctk.CTk):
                 return
             self.current_view.destroy()
             self.current_view = NewtonInterpolationView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "newton_method":
+            if isinstance(self.current_view, NewtonMethodView):
+                return
+            self.current_view.destroy()
+            self.current_view = NewtonMethodView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "bisection_method":
+            if isinstance(self.current_view, BisectionMethodView):
+                return
+            self.current_view.destroy()
+            self.current_view = BisectionMethodView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "secant_method":
+            if isinstance(self.current_view, SecantMethodView):
+                return
+            self.current_view.destroy()
+            self.current_view = SecantMethodView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "gauss_seidel":
+            if isinstance(self.current_view, GaussSeidelView):
+                return
+            self.current_view.destroy()
+            self.current_view = GaussSeidelView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+        elif view_name == "trapezoidal_rule":
+            if isinstance(self.current_view, TrapezoidalRuleView):
+                return
+            self.current_view.destroy()
+            self.current_view = TrapezoidalRuleView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
