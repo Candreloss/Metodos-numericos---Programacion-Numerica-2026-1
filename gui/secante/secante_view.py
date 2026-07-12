@@ -163,13 +163,43 @@ class SecantRootsView(ctk.CTkFrame):
 
     def solve_secant(self):
         func_str = self.entry_func.get()
-        x0 = self.entry_x0.get()
-        x1 = self.entry_x1.get()
-        tol = self.entry_tol.get()
-        max_i = self.entry_max.get()
+        
+        # 1. VALIDACIÓN ESTRICTA DE ENTRADAS UI Y RESTRICCIONES LÓGICAS
+        try:
+            x0 = float(self.entry_x0.get())
+            x1 = float(self.entry_x1.get())
+            tol = float(self.entry_tol.get())
+            max_i = int(self.entry_max.get())
+            xmin = float(self.entry_xmin.get())
+            xmax = float(self.entry_xmax.get())
+            
+            # Reglas de negocio
+            if max_i <= 0:
+                raise ValueError("Las iteraciones máximas deben ser un entero positivo mayor a 0.")
+            if tol <= 0:
+                raise ValueError("La tolerancia debe ser un valor positivo (ej. 1e-5).")
+            if x0 == x1:
+                raise ValueError("Las aproximaciones iniciales x0 y x1 no pueden ser iguales para iniciar la Secante.")
+            if xmin >= xmax:
+                raise ValueError("El dominio de la gráfica es inválido (X min debe ser estrictamente menor a X max).")
+                
+        except ValueError as e:
+            err_msg = str(e)
+            if "could not convert" in err_msg or "invalid literal" in err_msg:
+                err_msg = "Asegúrese de que los puntos, Tolerancia, Iteraciones y el Dominio contengan únicamente números."
+                
+            self.txt_res.configure(state="normal")
+            self.txt_res.delete("0.0", "end")
+            self.txt_res.insert("0.0", f"❌ Error de Entrada:\n{err_msg}")
+            self.txt_res.configure(state="disabled")
+            return
         
         solver = SecantRoots(func_str, x0, x1, tol, max_i)
         result = solver.solve()
+        
+        # Habilitar temporalmente para inyección de datos
+        self.txt_res.configure(state="normal")
+        self.txt_steps.configure(state="normal")
         
         self.txt_res.delete("0.0", "end")
         self.txt_steps.delete("0.0", "end")
@@ -178,6 +208,19 @@ class SecantRootsView(ctk.CTkFrame):
         
         if not result["success"]:
             self.txt_res.insert("0.0", f"❌ Error:\n{result['error_message']}")
+            
+            if result["steps"]:
+                table_header = f"{'Iter':<6} | {'x_i':<14} | {'f(x_i)':<15} | {'Error (%)':<15}\n"
+                table_header += "━" * 58 + "\n"
+                self.txt_steps.insert("end", table_header)
+                for step in result["steps"]:
+                    err_str = f"{step['error']:.6f}" if step["error"] is not None else "---"
+                    row = f"{step['iter']:<6} | {step['x']:<14.6f} | {step['fx']:<15.2e} | {err_str:<15}\n"
+                    self.txt_steps.insert("end", row)
+            
+            # Bloquear panel de resultados ante inyección maliciosa
+            self.txt_res.configure(state="disabled")
+            self.txt_steps.configure(state="disabled")
             self.canvas.draw()
             return
             
@@ -192,14 +235,32 @@ class SecantRootsView(ctk.CTkFrame):
             row = f"{step['iter']:<6} | {step['x']:<14.6f} | {step['fx']:<15.2e} | {err_str:<15}\n"
             self.txt_steps.insert("end", row)
             
+        # Bloquear panel de resultados ante inyección maliciosa
+        self.txt_res.configure(state="disabled")
+        self.txt_steps.configure(state="disabled")
+        
+        # Lógica de graficación (Reemplazar la existente por esta)
         try:
             xmin = float(self.entry_xmin.get())
             xmax = float(self.entry_xmax.get())
             x_sym = sp.Symbol('x')
-            f_num = sp.lambdify(x_sym, sp.sympify(func_str), 'numpy')
+            cleaned_str = func_str.replace('sen(', 'sin(')
+            f_num = sp.lambdify(x_sym, sp.sympify(cleaned_str), 'numpy')
             
             x_curve = np.linspace(xmin, xmax, 500)
-            self.ax.plot(x_curve, f_num(x_curve), label="f(x)", color="#58A1D3", lw=2)
+            
+            # 1. Silenciar los warnings de consola (RuntimeWarning) de Numpy
+            with np.errstate(divide='ignore', invalid='ignore'):
+                y_curve = f_num(x_curve)
+                # Asegurar que sea un arreglo (por si la función ingresada es una constante ej. f(x) = 5)
+                if np.isscalar(y_curve):
+                    y_curve = np.full_like(x_curve, y_curve)
+                    
+            # 2. Si toda la evaluación es indefinida (NaN), forzamos el error a la interfaz
+            if np.isnan(y_curve).all():
+                raise ValueError("La función es compleja o\nindefinida en este dominio.")
+                
+            self.ax.plot(x_curve, y_curve, label="f(x)", color="#58A1D3", lw=2)
             self.ax.axhline(0, color=COLOR_BORDER[1] if ctk.get_appearance_mode() == "Dark" else COLOR_BORDER[0], linestyle="--", linewidth=1)
             
             steps_data = result["steps"]
@@ -219,9 +280,14 @@ class SecantRootsView(ctk.CTkFrame):
                 legend.get_frame().set_edgecolor(COLOR_BORDER[1] if is_dark else COLOR_BORDER[0])
                 for text in legend.get_texts():
                     text.set_color(COLOR_TEXT[1] if is_dark else COLOR_TEXT[0])
-            
             self.ax.set_title("Evolución de los Iterados", fontdict={"size": 11, "weight": "bold"})
+            
         except Exception as ex:
-            self.ax.text(0.5, 0.5, f"Error al graficar:\n{str(ex)}", ha="center", va="center")
+            is_dark = (ctk.get_appearance_mode() == "Dark")
+            txt_color = COLOR_TEXT[1] if is_dark else COLOR_TEXT[0]
+            # Centrado absoluto usando transAxes para que no dependa de coordenadas válidas
+            self.ax.text(0.5, 0.5, f"⚠ Gráfica no disponible:\n{str(ex)}", 
+                         ha="center", va="center", transform=self.ax.transAxes, 
+                         color=txt_color, weight="bold")
             
         self.canvas.draw()
