@@ -72,6 +72,20 @@ class Sidebar(ctk.CTkFrame):
         )
         self.btn_gauss_simple.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
         
+        self.btn_gauss_seidel = ctk.CTkButton(
+            self, 
+            text="      📊   Gauss-Seidel", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_gauss_seidel_click
+        )
+        self.btn_gauss_seidel.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
+        
         self.btn_lagrange = ctk.CTkButton(
             self, 
             text="      📈   Lagrange", 
@@ -84,7 +98,7 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_lagrange_click
         )
-        self.btn_lagrange.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_lagrange.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
         
         self.btn_newton_interp = ctk.CTkButton(
             self, 
@@ -98,7 +112,7 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_newton_interp_click
         )
-        self.btn_newton_interp.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_newton_interp.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
 
         # --- NUEVOS MÉTODOS DE RAÍCES ---
         self.btn_newton_roots = ctk.CTkButton(
@@ -113,7 +127,7 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_newton_roots_click
         )
-        self.btn_newton_roots.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_newton_roots.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
 
         self.btn_secant_roots = ctk.CTkButton(
             self, 
@@ -127,21 +141,8 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_secant_click
         )
-        self.btn_secant_roots.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_secant_roots.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
         # --------------------------------
-        
-        self.btn_gauss_seidel = ctk.CTkButton(
-            self, 
-            text="      🔒   Gauss-Seidel (Prox.)", 
-            fg_color="transparent", 
-            text_color=COLOR_MUTED,
-            state="disabled",
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w"
-        )
-        self.btn_gauss_seidel.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
         
         # Selector de Tema (Ahora en la fila 10 por el espaciado)
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -196,6 +197,13 @@ class Sidebar(ctk.CTkFrame):
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("gauss_simple")
+
+    def on_gauss_seidel_click(self):
+        if self.active_method == "gauss_seidel":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("gauss_seidel")
 
     def on_lagrange_click(self):
         if self.active_method == "lagrange_interpolation":

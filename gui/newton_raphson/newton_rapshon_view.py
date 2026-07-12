@@ -51,26 +51,38 @@ class NewtonRootsView(ctk.CTkFrame):
             fg_color=COLOR_PANEL,
             border_color=COLOR_BORDER,
             border_width=1,
-            corner_radius=12
+            corner_radius=12,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.input_card.grid(row=1, column=0, sticky="nsew", padx=(0, 15), pady=0)
         self.setup_inputs()
         
-        # 4. Tarjeta Derecha: Pestañas de Resultados (Estilo Azul Corp.)
-        self.output_panel = ctk.CTkTabview(
+        # 4. Panel Derecho de Resultados (Estilo Azul Corp.)
+        self.right_panel = ctk.CTkFrame(
             self.content_frame,
             fg_color=COLOR_PANEL,
             border_color=COLOR_BORDER,
             border_width=1,
-            corner_radius=12,
-            segmented_button_fg_color=COLOR_BG,
-            segmented_button_selected_color=COLOR_ACCENT,
-            segmented_button_selected_hover_color=COLOR_ACCENT_HOVER,
-            segmented_button_unselected_color=COLOR_BG,
-            segmented_button_unselected_hover_color=COLOR_INTERACTIVE_BORDER,
-            text_color=COLOR_TEXT
+            corner_radius=12
         )
-        self.output_panel.grid(row=1, column=1, sticky="nsew", padx=(15, 0), pady=0)
+        self.right_panel.grid(row=1, column=1, sticky="nsew", padx=(15, 0), pady=0)
+        self.right_panel.grid_columnconfigure(0, weight=1)
+        self.right_panel.grid_rowconfigure(0, weight=1)
+        
+        # Pestañas de Resultados
+        self.output_panel = ctk.CTkTabview(
+            self.right_panel,
+            fg_color=COLOR_PANEL,
+            segmented_button_fg_color=COLOR_BG,
+            segmented_button_selected_color=("#58A1D3", "#0F4C81"),
+            segmented_button_selected_hover_color=("#3e87b7", "#0b3a63"),
+            segmented_button_unselected_color=COLOR_BG,
+            segmented_button_unselected_hover_color=COLOR_BORDER,
+            text_color=COLOR_TEXT,
+            corner_radius=8
+        )
+        self.output_panel.grid(row=0, column=0, sticky="nsew", padx=12, pady=12)
         
         self.tab_res = self.output_panel.add("Resultado")
         self.tab_steps = self.output_panel.add("Paso a Paso")
@@ -120,7 +132,7 @@ class NewtonRootsView(ctk.CTkFrame):
             font=ctk.CTkFont(family="Inter", size=13, weight="bold"),
             fg_color=COLOR_ACCENT,
             hover_color=COLOR_ACCENT_HOVER,
-            text_color="#FFFFFF",
+            text_color=COLOR_BG,
             corner_radius=8,
             height=40,
             command=self.solve_newton
@@ -130,14 +142,18 @@ class NewtonRootsView(ctk.CTkFrame):
     def setup_outputs(self):
         self.txt_res = ctk.CTkTextbox(
             self.tab_res, font=self.label_font, fg_color=COLOR_BG,
-            border_color=COLOR_BORDER, border_width=1, text_color=COLOR_TEXT, corner_radius=8
+            border_color=COLOR_BORDER, border_width=1, text_color=COLOR_TEXT, corner_radius=8,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_res.pack(fill="both", expand=True, padx=15, pady=15)
         self.txt_res.insert("0.0", "Ingrese los parámetros y presione 'Calcular Raíz' para ver el diagnóstico.")
         
         self.txt_steps = ctk.CTkTextbox(
             self.tab_steps, font=ctk.CTkFont(family="Consolas", size=12), fg_color=COLOR_BG,
-            border_color=COLOR_BORDER, border_width=1, text_color=COLOR_TEXT, corner_radius=8
+            border_color=COLOR_BORDER, border_width=1, text_color=COLOR_TEXT, corner_radius=8,
+            scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
+            scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_steps.pack(fill="both", expand=True, padx=15, pady=15)
         
