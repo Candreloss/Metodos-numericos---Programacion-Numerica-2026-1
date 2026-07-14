@@ -24,7 +24,7 @@ class Sidebar(ctk.CTkFrame):
         self.title_font = get_title_font()
         self.label_font = get_label_font()
         
-        self.grid_rowconfigure(10, weight=1)
+        self.grid_rowconfigure(11, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         self.create_widgets()
@@ -45,42 +45,17 @@ class Sidebar(ctk.CTkFrame):
         sep = ctk.CTkFrame(self, height=1, fg_color=COLOR_BORDER)
         sep.grid(row=1, column=0, sticky="ew", padx=24, pady=0)
         
+        # Sección de selección de métodos
+        method_title = ctk.CTkLabel(
+            self, 
+            text="MÉTODOS", 
+            font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
+            text_color=COLOR_MUTED
+        )
+        method_title.grid(row=2, column=0, padx=24, pady=(25, 12), sticky="w")
+        
+        # Menú de Métodos (Botones expandidos de borde a borde, con corner_radius=0 y altura de 44px)
         sidebar_font = ctk.CTkFont(family="Inter", size=13, weight="bold")
-        section_font = ctk.CTkFont(family="Inter", size=11, weight="bold")
-        
-        # --- SECCIÓN 1: RAÍCES DE FUNCIONES ---
-        section_roots = ctk.CTkLabel(
-            self, 
-            text="MÉTODOS PARA EL CÁLCULO\nDE RAÍCES DE FUNCIONES", 
-            font=section_font, 
-            text_color=COLOR_MUTED,
-            justify="left"
-        )
-        section_roots.grid(row=2, column=0, padx=24, pady=(20, 8), sticky="w")
-        
-        self.btn_bisection = ctk.CTkButton(
-            self, 
-            text="      📐   Método de Bisección", 
-            fg_color="transparent", 
-            text_color=COLOR_TEXT,
-            hover_color=COLOR_INTERACTIVE_BORDER,
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w",
-            command=self.on_bisection_click
-        )
-        self.btn_bisection.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
-        
-        # --- SECCIÓN 2: ECUACIONES LINEALES ---
-        section_linear = ctk.CTkLabel(
-            self, 
-            text="MÉTODOS PARA RESOLUCIÓN\nDE ECUACIONES LINEALES", 
-            font=section_font, 
-            text_color=COLOR_MUTED,
-            justify="left"
-        )
-        section_linear.grid(row=4, column=0, padx=24, pady=(20, 8), sticky="w")
         
         self.btn_gauss_simple = ctk.CTkButton(
             self, 
@@ -94,21 +69,11 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_gauss_simple_click
         )
-        self.btn_gauss_simple.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_gauss_simple.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
         
-        # --- SECCIÓN 3: INTERPOLACIONES E INTEGRACIONES ---
-        section_interp = ctk.CTkLabel(
+        self.btn_gauss_seidel = ctk.CTkButton(
             self, 
-            text="INTERPOLACIONES E\nINTEGRACIONES", 
-            font=section_font, 
-            text_color=COLOR_MUTED,
-            justify="left"
-        )
-        section_interp.grid(row=6, column=0, padx=24, pady=(20, 8), sticky="w")
-        
-        self.btn_newton_interpolation = ctk.CTkButton(
-            self, 
-            text="      📈   Interpol. de Newton", 
+            text="      📊   Gauss-Seidel", 
             fg_color="transparent", 
             text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
@@ -116,13 +81,13 @@ class Sidebar(ctk.CTkFrame):
             corner_radius=0,
             height=44,
             anchor="w",
-            command=self.on_newton_interpolation_click
+            command=self.on_gauss_seidel_click
         )
-        self.btn_newton_interpolation.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_gauss_seidel.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
         
         self.btn_lagrange = ctk.CTkButton(
             self, 
-            text="      📈   Interpol. Lagrange", 
+            text="      📈   Lagrange", 
             fg_color="transparent", 
             text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
@@ -132,11 +97,11 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_lagrange_click
         )
-        self.btn_lagrange.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_lagrange.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
         
-        self.btn_trapezoidal = ctk.CTkButton(
+        self.btn_newton_interp = ctk.CTkButton(
             self, 
-            text="      📐   Regla del Trapecio", 
+            text="      📈   Newton (Interp.)", 
             fg_color="transparent", 
             text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
@@ -144,13 +109,69 @@ class Sidebar(ctk.CTkFrame):
             corner_radius=0,
             height=44,
             anchor="w",
-            command=self.on_trapezoidal_click
+            command=self.on_newton_interp_click
         )
-        self.btn_trapezoidal.grid(row=9, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_newton_interp.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
+
+        self.btn_newton_roots = ctk.CTkButton(
+            self, 
+            text="      📐   Newton (Raíces)", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_newton_roots_click
+        )
+        self.btn_newton_roots.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
+
+        self.btn_secant_roots = ctk.CTkButton(
+            self, 
+            text="      📐   Secante (Raíces)", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_secant_click
+        )
+        self.btn_secant_roots.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
         
+        self.btn_bisection = ctk.CTkButton(
+            self, 
+            text="      📐   Bisección", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_bisection_click
+        )
+        self.btn_bisection.grid(row=9, column=0, padx=0, pady=2, sticky="ew")
+        
+        self.btn_trapecio = ctk.CTkButton(
+            self, 
+            text="      📐   Trapecio", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_trapecio_click
+        )
+        self.btn_trapecio.grid(row=10, column=0, padx=0, pady=2, sticky="ew")
+
         # Selector de Tema
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
-        theme_frame.grid(row=11, column=0, padx=24, pady=24, sticky="ew")
+        theme_frame.grid(row=12, column=0, padx=24, pady=24, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
@@ -194,12 +215,20 @@ class Sidebar(ctk.CTkFrame):
         else:
             ctk.set_appearance_mode("system")
 
+    # --- EVENTOS DE RUTEO ---
     def on_gauss_simple_click(self):
         if self.active_method == "gauss_simple":
             return
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("gauss_simple")
+
+    def on_gauss_seidel_click(self):
+        if self.active_method == "gauss_seidel":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("gauss_seidel")
 
     def on_lagrange_click(self):
         if self.active_method == "lagrange_interpolation":
@@ -208,12 +237,26 @@ class Sidebar(ctk.CTkFrame):
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("lagrange_interpolation")
 
-    def on_newton_interpolation_click(self):
+    def on_newton_interp_click(self):
         if self.active_method == "newton_interpolation":
             return
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("newton_interpolation")
+
+    def on_newton_roots_click(self):
+        if self.active_method == "newton_roots":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("newton_roots")
+
+    def on_secant_click(self):
+        if self.active_method == "secant_roots":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("secant_roots")
 
     def on_bisection_click(self):
         if self.active_method == "bisection_method":
@@ -222,7 +265,7 @@ class Sidebar(ctk.CTkFrame):
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("bisection_method")
 
-    def on_trapezoidal_click(self):
+    def on_trapecio_click(self):
         if self.active_method == "trapezoidal_rule":
             return
         app = self.winfo_toplevel()

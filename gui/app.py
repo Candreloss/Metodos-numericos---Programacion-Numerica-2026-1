@@ -1,9 +1,12 @@
 import customtkinter as ctk #pyright: ignore
 from gui.gauss_simple.gauss_simple_view import GaussSimpleView
+from gui.gauss_seidel.gauss_seidel_view import GaussSeidelView
 from gui.lagrange_interpolation.lagrange_interpolation_view import LagrangeInterpolationView
 from gui.newton_interpolation.newton_interpolation_view import NewtonInterpolationView
 from gui.bisection_method.bisection_method_view import BisectionMethodView
 from gui.trapezoidal_rule.trapezoidal_rule_view import TrapezoidalRuleView
+from gui.newton_raphson.newton_rapshon_view import NewtonRootsView
+from gui.secante.secante_view import SecantRootsView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -22,9 +25,9 @@ class GaussSimpleApp(ctk.CTk):
         ctk.set_appearance_mode("dark")
         
         # Configurar ventana principal y centrado en pantalla
-        self.title("Métodos Numéricos - Programación Numérica")
+        self.title("Métodos Numéricos")
         
-        width = 1200
+        width = 1250
         height = 650
         
         # Calcular posición central basada en las dimensiones de la pantalla
@@ -48,7 +51,7 @@ class GaussSimpleApp(ctk.CTk):
         
         # Crear Contenedor Principal e inyectar la vista
         self.create_main_container()
-
+ 
     def create_main_container(self):
         # Contenedor para cargar la vista dinámica (ocupa toda la ventana)
         self.main_container = ctk.CTkFrame(self, fg_color="transparent")
@@ -59,7 +62,7 @@ class GaussSimpleApp(ctk.CTk):
         # Cargar vista inicial (Gauss Simple)
         self.current_view = GaussSimpleView(self.main_container)
         self.current_view.grid(row=0, column=0, sticky="nsew")
-
+ 
     def switch_to_view(self, view_name):
         """Alterna dinámicamente la vista cargada en el contenedor principal."""
         if view_name == "gauss_simple":
@@ -68,27 +71,52 @@ class GaussSimpleApp(ctk.CTk):
             self.current_view.destroy()
             self.current_view = GaussSimpleView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
+            
+        elif view_name == "gauss_seidel":
+            if isinstance(self.current_view, GaussSeidelView):
+                return
+            self.current_view.destroy()
+            self.current_view = GaussSeidelView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+            
         elif view_name == "lagrange_interpolation":
             if isinstance(self.current_view, LagrangeInterpolationView):
                 return
             self.current_view.destroy()
             self.current_view = LagrangeInterpolationView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
+            
         elif view_name == "newton_interpolation":
             if isinstance(self.current_view, NewtonInterpolationView):
                 return
             self.current_view.destroy()
             self.current_view = NewtonInterpolationView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
+            
         elif view_name == "bisection_method":
             if isinstance(self.current_view, BisectionMethodView):
                 return
             self.current_view.destroy()
             self.current_view = BisectionMethodView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
+
         elif view_name == "trapezoidal_rule":
             if isinstance(self.current_view, TrapezoidalRuleView):
                 return
             self.current_view.destroy()
             self.current_view = TrapezoidalRuleView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+            
+        elif view_name == "newton_roots":
+            if isinstance(self.current_view, NewtonRootsView):
+                return
+            self.current_view.destroy()
+            self.current_view = NewtonRootsView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+            
+        elif view_name == "secant_roots":
+            if isinstance(self.current_view, SecantRootsView):
+                return
+            self.current_view.destroy()
+            self.current_view = SecantRootsView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
