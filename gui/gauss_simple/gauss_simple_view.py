@@ -35,47 +35,36 @@ class GaussSimpleView(ctk.CTkFrame):
         self.load_preset("Chapra_Ex")
 
     def create_layout(self):
-        # 1. Instanciar la Barra Lateral Global
         self.sidebar = Sidebar(self, active_method="gauss_simple")
         self.sidebar.grid(row=0, column=0, sticky="nsew")
         
-        # 2. Contenedor de contenido de la vista (con espaciados/márgenes)
         self.view_container = ctk.CTkFrame(self, fg_color="transparent")
         self.view_container.grid(row=0, column=1, sticky="nsew", padx=24, pady=24)
         self.view_container.grid_columnconfigure(0, weight=1)
         self.view_container.grid_rowconfigure(1, weight=1)
         
-        # Cabecera de la sección (dentro de view_container)
-        header_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
-        header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 20))
-        header_frame.grid_columnconfigure(0, weight=1)
+        self.header_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
+        self.header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 20))
+        self.header_frame.grid_columnconfigure(0, weight=1)
         
-        method_name = ctk.CTkLabel(header_frame, text="Método de Gauss Simple (Eliminación Gaussiana)", font=self.title_font, text_color=COLOR_LIGHT_CYAN)
+        method_name = ctk.CTkLabel(self.header_frame, text="Método de Gauss Simple (Eliminación Gaussiana)", font=self.title_font, text_color=COLOR_LIGHT_CYAN)
         method_name.grid(row=0, column=0, sticky="w")
         
-        method_desc = ctk.CTkLabel(header_frame, text="Resuelve sistemas de ecuaciones lineales Ax = b mediante eliminación hacia adelante y sustitución hacia atrás.", font=self.label_font, text_color=COLOR_MUTED)
+        method_desc = ctk.CTkLabel(self.header_frame, text="Resuelve sistemas de ecuaciones lineales Ax = b mediante eliminación hacia adelante y sustitución hacia atrás.", font=self.label_font, text_color=COLOR_MUTED)
         method_desc.grid(row=1, column=0, sticky="w", pady=(4, 0))
         
-        # Contenido Dividido en dos paneles (dentro de view_container)
         content_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
         content_frame.grid(row=1, column=0, sticky="nsew")
-        content_frame.grid_columnconfigure(0, weight=6) # Panel de entrada
-        content_frame.grid_columnconfigure(1, weight=5) # Panel de resultados
-        content_frame.grid_rowconfigure(0, weight=1)
         
-        # --- PANEL IZQUIERDO: CONFIGURACIÓN Y MATRIZ ---
         self.left_panel = ctk.CTkFrame(content_frame, fg_color=COLOR_PANEL, border_color=COLOR_BORDER, border_width=1, corner_radius=12)
         self.left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 12), pady=0)
         self.left_panel.grid_columnconfigure(0, weight=1)
         self.left_panel.grid_rowconfigure(2, weight=1) # El área de la matriz se expande
         
-        # 1. Configuración superior del panel izquierdo (Reorganizado en filas para evitar desbordamiento)
         config_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
         config_frame.grid(row=0, column=0, sticky="ew", padx=20, pady=20)
         config_frame.grid_columnconfigure(1, weight=1)
         config_frame.grid_columnconfigure(3, weight=1)
-        
-        # Fila 0: Dimensión (n) y Decimales
         n_label = ctk.CTkLabel(config_frame, text="Dimensión (n):", font=self.label_font, text_color=COLOR_TEXT)
         n_label.grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 10))
         
@@ -119,7 +108,6 @@ class GaussSimpleView(ctk.CTkFrame):
         self.dec_combo.set("4")
         self.dec_combo.grid(row=0, column=3, sticky="ew", pady=(0, 10))
         
-        # Fila 1: Ejemplos (Presets) - Expansión completa usando columnspan
         preset_label = ctk.CTkLabel(config_frame, text="Ejemplos:", font=self.label_font, text_color=COLOR_TEXT)
         preset_label.grid(row=1, column=0, sticky="w", padx=(0, 8), pady=(0, 10))
         
@@ -142,7 +130,6 @@ class GaussSimpleView(ctk.CTkFrame):
         self.preset_combo.set("Ejemplo Chapra (3x3)")
         self.preset_combo.grid(row=1, column=1, columnspan=3, sticky="ew", pady=(0, 10))
         
-        # Fila 2: Opciones de cálculo (Pivoteo Switch)
         self.pivot_var = ctk.BooleanVar(value=True)
         self.pivot_switch = ctk.CTkSwitch(
             config_frame, 
@@ -157,14 +144,12 @@ class GaussSimpleView(ctk.CTkFrame):
         )
         self.pivot_switch.grid(row=2, column=0, columnspan=4, sticky="w", pady=(5, 0))
         
-        # 3. Contenedor de la Matriz [A | b]
         matrix_header = ctk.CTkLabel(self.left_panel, text="Ingrese los coeficientes del sistema [A | b]:", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
         matrix_header.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 8))
         
         self.matrix_grid = MatrixGrid(self.left_panel)
         self.matrix_grid.grid(row=3, column=0, sticky="nsew", padx=(10, 10), pady=(0, 20))
         
-        # 4. Botones de Acción inferiores
         actions_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
         actions_frame.grid(row=4, column=0, sticky="ew", padx=20, pady=20)
         actions_frame.grid_columnconfigure(0, weight=1)
@@ -198,7 +183,6 @@ class GaussSimpleView(ctk.CTkFrame):
         )
         self.btn_solve.grid(row=0, column=1, padx=(6, 0), sticky="ew")
         
-        # --- PANEL DERECHO: RESULTADOS ---
         self.right_panel = ctk.CTkFrame(content_frame, fg_color=COLOR_PANEL, border_color=COLOR_BORDER, border_width=1, corner_radius=12)
         self.right_panel.grid(row=0, column=1, sticky="nsew", padx=(12, 0), pady=0)
         self.right_panel.grid_columnconfigure(0, weight=1)
@@ -217,12 +201,10 @@ class GaussSimpleView(ctk.CTkFrame):
         )
         self.result_tabs.grid(row=0, column=0, rowspan=2, sticky="nsew", padx=12, pady=12)
         
-        # Agregar pestañas
         self.tab_solution = self.result_tabs.add("Solución")
         self.tab_steps = self.result_tabs.add("Paso a Paso")
         self.tab_validation = self.result_tabs.add("Validación")
         
-        # Configurar cada pestaña
         self.setup_solution_tab()
         self.setup_steps_tab()
         self.setup_validation_tab()

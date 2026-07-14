@@ -15,28 +15,23 @@ class NewtonRootsView(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent, fg_color="transparent")
         
-        # Rejilla de Máxima Jerarquía: Columna 0 (Sidebar), Columna 1 (Contenido)
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
-        # 1. Barra Lateral Uniforme de Navegación
         self.sidebar = Sidebar(self, active_method="newton_roots")
         self.sidebar.grid(row=0, column=0, sticky="nsew")
         
-        # 2. Contenedor del Contenido
         self.content_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.content_frame.grid(row=0, column=1, sticky="nsew", padx=30, pady=30)
         self.content_frame.grid_columnconfigure(0, weight=1, minsize=340)
         self.content_frame.grid_columnconfigure(1, weight=2)
         self.content_frame.grid_rowconfigure(1, weight=1)
         
-        # Tipografías del Tema
         self.title_font = get_title_font()
         self.section_font = get_section_font()
         self.label_font = get_label_font()
         
-        # Título de la Sección
         self.title_label = ctk.CTkLabel(
             self.content_frame, 
             text="📐 Cálculo de Raíces: Método de Newton-Raphson", 
@@ -45,7 +40,6 @@ class NewtonRootsView(ctk.CTkFrame):
         )
         self.title_label.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 20))
         
-        # 3. Tarjeta Izquierda: Parámetros de Entrada (Estilo Azul Corp.)
         self.input_card = ctk.CTkScrollableFrame(
             self.content_frame,
             fg_color=COLOR_PANEL,
@@ -58,7 +52,6 @@ class NewtonRootsView(ctk.CTkFrame):
         self.input_card.grid(row=1, column=0, sticky="nsew", padx=(0, 15), pady=0)
         self.setup_inputs()
         
-        # 4. Panel Derecho de Resultados (Estilo Azul Corp.)
         self.right_panel = ctk.CTkFrame(
             self.content_frame,
             fg_color=COLOR_PANEL,
@@ -70,7 +63,6 @@ class NewtonRootsView(ctk.CTkFrame):
         self.right_panel.grid_columnconfigure(0, weight=1)
         self.right_panel.grid_rowconfigure(0, weight=1)
         
-        # Pestañas de Resultados
         self.output_panel = ctk.CTkTabview(
             self.right_panel,
             fg_color=COLOR_PANEL,
@@ -182,7 +174,6 @@ class NewtonRootsView(ctk.CTkFrame):
     def solve_newton(self):
         func_str = self.entry_func.get()
         
-        # 1. VALIDACIÓN ESTRICTA DE ENTRADAS UI Y RESTRICCIONES LÓGICAS
         try:
             x0 = float(self.entry_x0.get())
             tol = float(self.entry_tol.get())
@@ -190,7 +181,6 @@ class NewtonRootsView(ctk.CTkFrame):
             xmin = float(self.entry_xmin.get())
             xmax = float(self.entry_xmax.get())
             
-            # Reglas de negocio (Lógica de los métodos)
             if max_i <= 0:
                 raise ValueError("Las iteraciones máximas deben ser un entero positivo mayor a 0.")
             if tol <= 0:
@@ -199,38 +189,34 @@ class NewtonRootsView(ctk.CTkFrame):
                 raise ValueError("El dominio de la gráfica es inválido (X min debe ser estrictamente menor a X max).")
                 
         except ValueError as e:
-            # Detectar si el error fue por letras/vacíos, o por nuestras reglas lógicas
             err_msg = str(e)
             if "could not convert" in err_msg or "invalid literal" in err_msg:
                 err_msg = "Asegúrese de que x0, Tolerancia, Iteraciones y el Dominio contengan únicamente números."
-                
+
             self.txt_res.configure(state="normal")
             self.txt_res.delete("0.0", "end")
             self.txt_res.insert("0.0", f"❌ Error de Entrada:\n{err_msg}")
             self.txt_res.configure(state="disabled")
             return
-        
+
         solver = NewtonRoots(func_str, x0, tol, max_i)
         result = solver.solve()
-        
-        # Habilitar temporalmente los Textbox para poder limpiarlos y escribir
+
         self.txt_res.configure(state="normal")
         self.txt_steps.configure(state="normal")
-        
+
         self.txt_res.delete("0.0", "end")
         self.txt_steps.delete("0.0", "end")
         self.ax.clear()
         self.apply_graph_theme()
-        
+
         if not result["success"]:
-            # Traducción e interpretación amigable para errores de tipeo de Newton
             err_msg = result['error_message']
             if "could not parse" in err_msg.lower() or "sympify" in err_msg.lower():
                 err_msg = "Error de sintaxis en la función. Asegúrese de usar '*' para multiplicaciones (ej. '2*x' en lugar de '2x')."
-            
+
             self.txt_res.insert("0.0", f"❌ Error:\n{err_msg}")
-            
-            # Rellenar la tabla con lo que se haya logrado salvar antes de fallar (si aplica)
+
             if result["steps"]:
                 table_header = f"{'Iter':<6} | {'x_i':<14} | {'f(x_i)':<15} | {'Error (%)':<15}\n"
                 table_header += "━" * 58 + "\n"
@@ -239,8 +225,7 @@ class NewtonRootsView(ctk.CTkFrame):
                     err_str = f"{step['error']:.6f}" if step["error"] is not None else "---"
                     row = f"{step['iter']:<6} | {step['x']:<14.6f} | {step['fx']:<15.2e} | {err_str:<15}\n"
                     self.txt_steps.insert("end", row)
-                    
-            # Bloquear escritura del usuario (Cierre de brecha de seguridad)
+
             self.txt_res.configure(state="disabled")
             self.txt_steps.configure(state="disabled")
             self.canvas.draw()
@@ -258,12 +243,9 @@ class NewtonRootsView(ctk.CTkFrame):
             row = f"{step['iter']:<6} | {step['x']:<14.6f} | {step['fx']:<15.2e} | {err_str:<15}\n"
             self.txt_steps.insert("end", row)
             
-        # Bloquear los Textbox una vez escritos los resultados (Cierre de brecha de seguridad)
         self.txt_res.configure(state="disabled")
         self.txt_steps.configure(state="disabled")
         
-        # Lógica de graficación existente...
-        # Lógica de graficación (Reemplazar la existente por esta)
         try:
             xmin = float(self.entry_xmin.get())
             xmax = float(self.entry_xmax.get())
@@ -273,14 +255,11 @@ class NewtonRootsView(ctk.CTkFrame):
             
             x_curve = np.linspace(xmin, xmax, 500)
             
-            # 1. Silenciar los warnings de consola (RuntimeWarning) de Numpy
             with np.errstate(divide='ignore', invalid='ignore'):
                 y_curve = f_num(x_curve)
-                # Asegurar que sea un arreglo (por si la función ingresada es una constante ej. f(x) = 5)
                 if np.isscalar(y_curve):
                     y_curve = np.full_like(x_curve, y_curve)
-                    
-            # 2. Si toda la evaluación es indefinida (NaN), forzamos el error a la interfaz
+
             if np.isnan(y_curve).all():
                 raise ValueError("La función es compleja o\nindefinida en este dominio.")
                 
@@ -309,7 +288,6 @@ class NewtonRootsView(ctk.CTkFrame):
         except Exception as ex:
             is_dark = (ctk.get_appearance_mode() == "Dark")
             txt_color = COLOR_TEXT[1] if is_dark else COLOR_TEXT[0]
-            # Centrado absoluto usando transAxes para que no dependa de coordenadas válidas
             self.ax.text(0.5, 0.5, f"⚠ Gráfica no disponible:\n{str(ex)}", 
                          ha="center", va="center", transform=self.ax.transAxes, 
                          color=txt_color, weight="bold")

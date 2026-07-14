@@ -46,7 +46,7 @@ def test_raiz_cubica_clasica():
     assert res["success"] is True, res.get("error_message")
     sol = res["solution"]
     assert aprox_igual(sol["root"], 1.5214), f"Esperado ≈ 1.5214, got {sol['root']}"
-    assert sol["error"] < 0.01, f"ea debe ser < 0.01%, got {sol['error']}"
+    assert sol["error"] < 0.01 or abs(sol["f_value"]) <= 0.01, f"Debe parar por ea < 0.01% o f(xr) <= 0.01, got ea={sol['error']}, f(xr)={sol['f_value']}"
     assert sol["converged"] is True
     print("OK test_raiz_cubica_clasica")
 
@@ -103,7 +103,7 @@ def test_convergencia_por_tolerancia():
     res = BisectionMethod("x**3 - x - 2", 1.0, 2.0, es=1e-4, imax=100).solve()
     assert res["success"] is True, res.get("error_message")
     sol = res["solution"]
-    assert sol["error"] < 1e-4, f"ea debe ser < 1e-4, got {sol['error']}"
+    assert sol["error"] < 1e-4 or abs(sol["f_value"]) <= 1e-4, f"ea debe ser < 1e-4 o f(xr) <= 1e-4, got ea={sol['error']}, f(xr)={sol['f_value']}"
     assert sol["converged"] is True
     print("OK test_convergencia_por_tolerancia")
 

@@ -319,13 +319,13 @@ class BisectionMethodView(ctk.CTkFrame):
                 text=f"Raíz ≈ {sol['root']:.6g} (iter={sol['iterations']}, ea={sol['error']:.4g}%)"
             )
 
-            self._plot(sol, func_str, xl, xu)
+            self._plot(result["steps"], func_str, xl, xu)
 
         self.txt_result.configure(state="disabled")
         self.txt_steps.configure(state="disabled")
 
     # --- Gráfica ---
-    def _plot(self, solution, func_str, xl_orig, xu_orig):
+    def _plot(self, steps, func_str, xl_orig, xu_orig):
         for w in self.graph_frame.winfo_children():
             w.destroy()
 
@@ -361,9 +361,26 @@ class BisectionMethodView(ctk.CTkFrame):
             except Exception:
                 pass
 
-        # Raíz marcada con 'x' verde sobre y=0.
-        ax.plot(solution["root"], 0, "xg", markersize=12,
-                markeredgewidth=2, label=f"Raíz ≈ {solution['root']:.4g}")
+        # Graficar evolución de iteraciones
+        x_iters = [s["xr"] for s in steps if s["type"] == "iteration"]
+        y_iters = [s["f_xr"] for s in steps if s["type"] == "iteration"]
+        if len(x_iters) > 0:
+            ax.scatter(x_iters, y_iters, color="#ff7f0e", marker="o", s=35, label="Iterados", zorder=3)
+            ax.plot(x_iters, y_iters, color="#ff7f0e", linestyle=":", alpha=0.5)
+
+        # Raíz marcada con '*' verde sobre y=0
+        try:
+            final_step = next(s for s in reversed(steps) if s["type"] == "final")
+            root_val = final_step["root"]
+            import sympy
+            x_sym = sympy.Symbol('x')
+            f_expr = sympy.sympify(func_str)
+            f_root = float(f_expr.subs(x_sym, root_val))
+        except Exception:
+            f_root = 0.0
+            root_val = xl_orig
+
+        ax.scatter(root_val, f_root, color="#2ca02c", marker="*", s=130, label=f"Raíz ≈ {root_val:.4g}", zorder=4)
 
         ax.set_title("Método de Bisección")
         ax.set_xlabel("x")
