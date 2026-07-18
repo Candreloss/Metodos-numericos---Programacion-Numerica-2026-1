@@ -2,43 +2,38 @@
 
 from lib.newton_raphson import NewtonRoots
 
-def test_newton():
-    print("="*60)
-    print("   TEST: MÉTODO DE NEWTON-RAPHSON")
-    print("="*60)
-    
-    # Función de prueba (Clásica de Chapra)
-    func_str = "exp(-x) - x"
-    x0 = 0.0
-    tol = 1e-5
 
-    print(f"Función a evaluar : f(x) = {func_str}")
-    print(f"Valor inicial (x0): {x0}")
-    print(f"Tolerancia        : {tol}\n")
+def run_case(func_str, x0, label):
+    print("=" * 70)
+    print(f"Prueba Newton-Raphson: {label}")
+    print(f"f(x) = {func_str}")
+    print(f"x0 = {x0}")
 
-    # Instanciar y resolver
-    solver = NewtonRoots(func_str, x0, tol=tol)
+    solver = NewtonRoots(func_str, x0, tol=1e-8, max_iter=100)
     result = solver.solve()
 
     if not result["success"]:
-        print(f"Error en la ejecución: {result['error_message']}")
-        return
+        print(f"ERROR: {result['error_message']}")
+        raise AssertionError(f"Newton-Raphson falló en {label}")
 
-    # Imprimir tabla de resultados
-    print(f"{'Iter':<5} | {'x_i':<12} | {'f(x_i)':<15} | {'Error (%)':<15}")
-    print("-" * 55)
-    
-    for step in result["steps"]:
-        iter_num = step["iter"]
-        x_val = f"{step['x']:.6f}"
-        fx_val = f"{step['fx']:.2e}"
-        err_val = f"{step['error']:.6f}" if step["error"] is not None else "---"
-        
-        print(f"{iter_num:<5} | {x_val:<12} | {fx_val:<15} | {err_val:<15}")
+    print(f"Resultado: {result['solution']:.10f}")
+    print(f"Mensaje: {result['message']}")
+    return result
 
-    print("-" * 55)
-    print(f"Resultado final: {result['message']}")
-    print("="*60)
+
+def test_newton():
+    cases = [
+        ("e^(x)+2^(-x)+2*cos(x)-6", 1.5, "Ejercicio 1"),
+        ("ln(x-1)+cos(x-1)", 1.5, "Ejercicio 2"),
+        ("2*x*cos(2*x)-cos(x-1)^2", 2.5, "Ejercicio 3 (intervalo [2,3])"),
+        ("(x-2)^2-ln(x)", 1.5, "Ejercicio 4 (intervalo [1,2])"),
+    ]
+
+    for func_str, x0, label in cases:
+        run_case(func_str, x0, label)
+
+    print("\nTodas las pruebas de Newton-Raphson completaron correctamente.")
+
 
 if __name__ == "__main__":
     test_newton()

@@ -9,7 +9,7 @@ from gui.theme import (
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
     get_title_font, get_section_font, get_label_font
 )
-from lib.secante import SecantRoots
+from lib.secante import SecantRoots, _parse_expression
 
 class SecantRootsView(ctk.CTkFrame):
     def __init__(self, parent):
@@ -91,14 +91,15 @@ class SecantRootsView(ctk.CTkFrame):
         )
         card_title.pack(anchor="w", padx=15, pady=(15, 10))
         
+        # Corregido: 'Dominio de la Función'
         fields = [
             ("Función f(x):", "entry_func", "exp(-x) - x"),
             ("Aproximación Inicial x0:", "entry_x0", "0.0"),
             ("Aproximación Inicial x1:", "entry_x1", "1.0"),
             ("Tolerancia (Tol):", "entry_tol", "1e-5"),
             ("Máx. Iteraciones:", "entry_max", "150"),
-            ("Dominio Gráfica Mín (X min):", "entry_xmin", "-2.0"),
-            ("Dominio Gráfica Máx (X max):", "entry_xmax", "3.0")
+            ("Dominio de la Función Mín (X min):", "entry_xmin", "-2.0"),
+            ("Dominio de la Función Máx (X max):", "entry_xmax", "3.0")
         ]
         
         for label_text, attr_name, default_val in fields:
@@ -141,6 +142,7 @@ class SecantRootsView(ctk.CTkFrame):
         )
         self.txt_res.pack(fill="both", expand=True, padx=15, pady=15)
         self.txt_res.insert("0.0", "Ingrese los parámetros y presione 'Calcular Raíz' para ver el diagnóstico.")
+        self.txt_res.configure(state="disabled") # Corregido: Bloqueo inicial
         
         self.txt_steps = ctk.CTkTextbox(
             self.tab_steps, font=ctk.CTkFont(family="Consolas", size=12), fg_color=COLOR_BG,
@@ -149,6 +151,7 @@ class SecantRootsView(ctk.CTkFrame):
             scrollbar_button_hover_color=COLOR_ACCENT
         )
         self.txt_steps.pack(fill="both", expand=True, padx=15, pady=15)
+        self.txt_steps.configure(state="disabled") # Corregido: Bloqueo inicial
         
         self.fig, self.ax = plt.subplots(figsize=(5, 4), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.tab_graph)
@@ -190,7 +193,8 @@ class SecantRootsView(ctk.CTkFrame):
             if x0 == x1:
                 raise ValueError("Las aproximaciones iniciales x0 y x1 no pueden ser iguales para iniciar la Secante.")
             if xmin >= xmax:
-                raise ValueError("El dominio de la gráfica es inválido (X min debe ser estrictamente menor a X max).")
+                # Corregido: "Dominio de la función"
+                raise ValueError("El dominio de la función es inválido (X min debe ser estrictamente menor a X max).")
                 
         except ValueError as e:
             err_msg = str(e)
@@ -246,11 +250,9 @@ class SecantRootsView(ctk.CTkFrame):
         self.txt_steps.configure(state="disabled")
         
         try:
-            xmin = float(self.entry_xmin.get())
-            xmax = float(self.entry_xmax.get())
             x_sym = sp.Symbol('x')
-            cleaned_str = func_str.replace('sen(', 'sin(')
-            f_num = sp.lambdify(x_sym, sp.sympify(cleaned_str), 'numpy')
+            f_expr = _parse_expression(func_str)
+            f_num = sp.lambdify(x_sym, f_expr, 'numpy')
             
             x_curve = np.linspace(xmin, xmax, 500)
             

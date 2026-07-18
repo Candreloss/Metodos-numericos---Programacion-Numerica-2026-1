@@ -1,6 +1,29 @@
 """Método de la Secante. Ver docs/metodos/secante.md."""
+import re
 import sympy as sp
 import numpy as np
+
+
+def _parse_expression(func_str):
+    """Normaliza expresiones matemáticas escritas en notación común."""
+    cleaned = func_str.strip()
+    cleaned = cleaned.replace('sen(', 'sin(')
+    cleaned = cleaned.replace('ln(', 'log(')
+    cleaned = re.sub(r'(?<![A-Za-z0-9_])e(?![A-Za-z0-9_])', 'E', cleaned)
+    cleaned = cleaned.replace('^', '**')
+    return sp.sympify(
+        cleaned,
+        locals={
+            'E': sp.E,
+            'pi': sp.pi,
+            'sin': sp.sin,
+            'cos': sp.cos,
+            'tan': sp.tan,
+            'exp': sp.exp,
+            'log': sp.log,
+        },
+    )
+
 
 class SecantRoots:
     """Cálculo de raíces mediante el método de la Secante."""
@@ -16,8 +39,7 @@ class SecantRoots:
         x = sp.Symbol('x')
 
         try:
-            cleaned_func = self.func_str.replace('sen(', 'sin(')
-            f_expr = sp.sympify(cleaned_func)
+            f_expr = _parse_expression(self.func_str)
             f = sp.lambdify(x, f_expr, 'numpy')
         except Exception as e:
             err_msg = str(e)
@@ -36,8 +58,9 @@ class SecantRoots:
             fx_prev_val = f(x_prev)
             fx_curr_val = f(x_curr)
 
-            if isinstance(fx_prev_val, complex) or isinstance(fx_curr_val, complex):
-                raise TypeError("La función evaluó a un número complejo.")
+            # VALIDACIÓN DE INDETERMINACIONES EN PUNTOS INICIALES
+            if np.isnan(fx_prev_val) or np.isnan(fx_curr_val) or np.isinf(fx_prev_val) or np.isinf(fx_curr_val) or isinstance(fx_prev_val, complex) or isinstance(fx_curr_val, complex):
+                raise TypeError("Uno o ambos puntos iniciales (x0 o x1) no pertenecen al dominio real de la función.")
 
             fx_prev = float(fx_prev_val)
             fx_curr = float(fx_curr_val)
@@ -82,8 +105,11 @@ class SecantRoots:
                 x_curr = x_next
 
                 fx_curr_val = f(x_curr)
-                if isinstance(fx_curr_val, complex):
-                    raise TypeError("La función evaluó a un número complejo.")
+                
+                # VALIDACIÓN CONTINUA DE INDETERMINACIONES
+                if np.isnan(fx_curr_val) or np.isinf(fx_curr_val) or isinstance(fx_curr_val, complex):
+                    raise TypeError("El método divergió o saltó hacia un punto fuera del dominio real de la función.")
+                    
                 fx_curr = float(fx_curr_val)
 
                 if error <= self.tol:
@@ -123,12 +149,12 @@ class SecantRoots:
                 "steps": self.history,
                 "error_message": f"Desbordamiento matemático en iteración {iter_count}.\nLos puntos divergieron con valores que tienden al infinito."
             }
-        except TypeError:
+        except TypeError as e:
             return {
                 "success": False,
                 "solution": None,
                 "steps": self.history,
-                "error_message": f"Error de dominio en iteración {iter_count}.\nSe intentó realizar una operación indefinida (ej. raíz cuadrada o logaritmo de un número negativo)."
+                "error_message": f"Error de dominio en iteración {iter_count}.\n{str(e)}"
             }
         except Exception as e:
             return {

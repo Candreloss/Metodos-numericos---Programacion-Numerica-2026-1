@@ -1,6 +1,29 @@
 """Newton-Raphson. Ver docs/metodos/newton_raphson.md."""
+import re
 import sympy as sp
 import numpy as np
+
+
+def _parse_expression(func_str):
+    """Normaliza expresiones matemáticas escritas en notación común."""
+    cleaned = func_str.strip()
+    cleaned = cleaned.replace('sen(', 'sin(')
+    cleaned = cleaned.replace('ln(', 'log(')
+    cleaned = re.sub(r'(?<![A-Za-z0-9_])e(?![A-Za-z0-9_])', 'E', cleaned)
+    cleaned = cleaned.replace('^', '**')
+    return sp.sympify(
+        cleaned,
+        locals={
+            'E': sp.E,
+            'pi': sp.pi,
+            'sin': sp.sin,
+            'cos': sp.cos,
+            'tan': sp.tan,
+            'exp': sp.exp,
+            'log': sp.log,
+        },
+    )
+
 
 class NewtonRoots:
     """Cálculo de raíces mediante el método de Newton-Raphson."""
@@ -15,7 +38,7 @@ class NewtonRoots:
         x = sp.Symbol('x')
 
         try:
-            f_expr = sp.sympify(self.func_str)
+            f_expr = _parse_expression(self.func_str)
             df_expr = sp.diff(f_expr, x)
             f = sp.lambdify(x, f_expr, 'numpy')
             df = sp.lambdify(x, df_expr, 'numpy')
@@ -36,8 +59,9 @@ class NewtonRoots:
                 fx_val = f(x_current)
                 dfx_val = df(x_current)
 
-                if isinstance(fx_val, complex) or isinstance(dfx_val, complex):
-                    raise TypeError("La función evaluó a un número complejo.")
+                # BLINDAJE CONTRA INDETERMINACIONES (NaN, Inf, Complejos)
+                if np.isnan(fx_val) or np.isnan(dfx_val) or np.isinf(fx_val) or np.isinf(dfx_val) or isinstance(fx_val, complex) or isinstance(dfx_val, complex):
+                    raise TypeError("La función o su derivada no están definidas matemáticamente en este punto (Resultado no real, NaN o Infinito).")
 
                 fx = float(fx_val)
                 dfx = float(dfx_val)
@@ -71,10 +95,15 @@ class NewtonRoots:
                 iter_count += 1
 
                 if error <= self.tol:
+                    # Validar también el último punto calculado
+                    fx_final = f(x_current)
+                    if np.isnan(fx_final) or isinstance(fx_final, complex):
+                        raise TypeError("El punto de convergencia final cayó en una zona indefinida de la función.")
+                    
                     self.history.append({
                         "iter": iter_count,
                         "x": x_current,
-                        "fx": float(f(x_current)),
+                        "fx": float(fx_final),
                         "error": error
                     })
                     break
@@ -104,7 +133,7 @@ class NewtonRoots:
                 "success": False,
                 "solution": None,
                 "steps": self.history,
-                "error_message": f"Error de dominio en iteración {iter_count}.\nPosible salto hacia un dominio indefinido (ej. logaritmos/raíces de negativos)."
+                "error_message": f"Error de dominio en iteración {iter_count}.\n{str(e)}"
             }
         except Exception as e:
             return {

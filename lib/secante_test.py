@@ -2,44 +2,38 @@
 
 from lib.secante import SecantRoots
 
-def test_secant():
-    print("="*60)
-    print("   TEST: MÉTODO DE LA SECANTE")
-    print("="*60)
-    
-    # Función de prueba
-    func_str = "exp(-x) - x"
-    x0 = 0.0
-    x1 = 1.0
-    tol = 1e-5
 
-    print(f"Función a evaluar : f(x) = {func_str}")
-    print(f"Puntos iniciales  : x0 = {x0}, x1 = {x1}")
-    print(f"Tolerancia        : {tol}\n")
+def run_case(func_str, x0, x1, label):
+    print("=" * 70)
+    print(f"Prueba Secante: {label}")
+    print(f"f(x) = {func_str}")
+    print(f"x0 = {x0}, x1 = {x1}")
 
-    # Instanciar y resolver
-    solver = SecantRoots(func_str, x0, x1, tol=tol)
+    solver = SecantRoots(func_str, x0, x1, tol=1e-8, max_iter=100)
     result = solver.solve()
 
     if not result["success"]:
-        print(f"Error en la ejecución: {result['error_message']}")
-        return
+        print(f"ERROR: {result['error_message']}")
+        raise AssertionError(f"Secante falló en {label}")
 
-    # Imprimir tabla de resultados
-    print(f"{'Iter':<5} | {'x_i':<12} | {'f(x_i)':<15} | {'Error (%)':<15}")
-    print("-" * 55)
-    
-    for step in result["steps"]:
-        iter_num = step["iter"]
-        x_val = f"{step['x']:.6f}"
-        fx_val = f"{step['fx']:.2e}"
-        err_val = f"{step['error']:.6f}" if step["error"] is not None else "---"
-        
-        print(f"{iter_num:<5} | {x_val:<12} | {fx_val:<15} | {err_val:<15}")
+    print(f"Resultado: {result['solution']:.10f}")
+    print(f"Mensaje: {result['message']}")
+    return result
 
-    print("-" * 55)
-    print(f"Resultado final: {result['message']}")
-    print("="*60)
+
+def test_secant():
+    cases = [
+        ("e^(x)+2^(-x)+2*cos(x)-6", 1.0, 2.0, "Ejercicio 1"),
+        ("ln(x-1)+cos(x-1)", 1.3, 2.0, "Ejercicio 2"),
+        ("2*x*cos(2*x)-cos(x-1)^2", 2.0, 3.0, "Ejercicio 3 (intervalo [2,3])"),
+        ("(x-2)^2-ln(x)", 1.0, 2.0, "Ejercicio 4 (intervalo [1,2])"),
+    ]
+
+    for func_str, x0, x1, label in cases:
+        run_case(func_str, x0, x1, label)
+
+    print("\nTodas las pruebas de Secante completaron correctamente.")
+
 
 if __name__ == "__main__":
     test_secant()
