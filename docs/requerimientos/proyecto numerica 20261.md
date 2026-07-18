@@ -1,0 +1,181 @@
+PROGRAMACIÓN NUMÉRICA
+
+Proyecto  (20%)
+
+FECHA DE ENTREGA: 15 de Julio.
+
+MODO DE ENTREGA: enviar al correo electrónico de contacto, con aviso mediante privado en
+
+Telegram que incluya una foto que incluya los atributos del correo enviado. El correo debe contener
+
+adjunta una carpeta comprimida con los .m de los algoritmos y el informe.
+
+1.
+
+ALGORITMOS (6%): (Programar en Octave, Matlab o Python)
+
+Debe crear un menú para que el usuario decida que método desea implementar, además el usuario
+
+debe ingresar por pantalla los datos necesarios para cada método (funciones, intervalos, matrices,
+
+coeficientes, valores iniciales, etc).  Mostrar los resultados de los métodos por pantalla de la manera
+
+que considere más adecuada.
+
+a.  Desarrolle  y  pruebe  un  programa  para  implementar  los  métodos  para  el  cálculo  de  raíces  de
+
+funciones:
+
+•  Método de Newton.
+
+•  Método de Bisección.
+
+•  Método de la secante.
+
+i.
+
+Cada algoritmo debe mostrar la evolución gráfica del mismo; es decir a medida que este generé un
+
+nuevo iterado x, debe graficar el punto (x, f(x)) en la gráfica. Utilizar una leyenda adecuada para
+
+diferenciar los iterados de la raíz obtenida. (para el método de Bisección la gráfica de la función
+
+debe realizarse en el intervalo de búsqueda, para el método de Newton y secante, solicitar al
+
+usuario que valores utilizar para el dominio de la función)
+
+ii.
+
+Cada  algoritmo  debe  mostrar  por  pantalla  (preferiblemente  en  forma  de  tabla):  número  de
+
+iteración, valor del punto (x, f(x)), error actual.
+
+iii.
+
+Para cada algoritmo se deben utilizar como criterio de parada la combinación entre los siguientes
+
+criterios: que el módulo del error relativo aproximado o el módulo de f(x) sea menor o igual que
+
+una  tolerancia  dada  o  el  número  de  iteraciones  máximo  sea  mayor  o  igual  a  150  iteraciones,
+
+indicando al finalizar el algoritmo si converge por tener un error aceptable o porque alcanzó el
+
+máximo de iteraciones, en cualquiera de los casos indicar explícitamente a que valor converge y
+
+su evaluación en la función.
+
+b.  Desarrolle y pruebe un programa para implementar los métodos para resolución de sistemas de
+
+ecuaciones lineales:
+
+•  Gauss con pivoteo parcial por máximo de columna
+
+•  Gauss-Siedel
+
+c.  Programar los seudocódigos de las figuras  18.7 (Interpolación de Newton), 18.11 (Interpolación
+
+de Lagrange), 21.9 a) y b)  (regla del trapecio), 21.13 desde la a) a la d)
+
+i.  Generar  las  gráficas  de  los  datos  (y  la  función  original  si  se  conoce)  en  conjunto  a  las
+
+interpolaciones de diferentes grados solicitadas. Deben estar debidamente identificadas con
+
+el uso de una leyenda.
+
+2.
+
+INFORME E IMPLEMENTACIÓN (8%)
+
+Implementación:
+
+a.  Método de bisección: aplicar el algoritmo a los siguientes problemas:
+
+i.  Ejercicio 7, de la  sección 2.1 del libro "Análisis Numérico - Burden & Faires - 7ma Edición", (el
+
+cual  pueden  encontrar  en  biblioteca  o  en  línea  Analisis  Numerico  -  Burden  &  Faires  -  7ma
+
+Edición PDF | PDF)
+
+ii.  Un  abrevadero  de  longitud 𝐿 tiene  una  sección  transversal  en  forma  de  semicírculo  con
+
+radio 𝑟.  (Véase  la  figura  anexa.)  Cuando  se  llena  de  agua  hasta  una  distancia ℎ de  la  parte
+
+superior, el volumen 𝑉 de agua es
+
+ℎ
+𝑉 = 𝐿 [0.5𝜋𝑟2 − 𝑟2  arcsin (
+𝑟
+
+) − ℎ√𝑟2 − ℎ2]
+
+Suponga que L=10 pies, r=1 pie, y que V=12.4 pies3. Determine la profundidad del agua en el abrevadero.
+
+ (sugerencia La sección transversal del abrevadero es un semicírculo de radio r=1 pie. La profundidad
+
+del agua h se mide desde la parte superior del semicírculo. Cuando h=0, el abrevadero está lleno y
+
+cuando h=1, el abrevadero está vacío (el agua alcanza justo el borde inferior))
+
+b.  Método de Newton: aplicar el algoritmo a los siguientes problemas: Ejercicio 6, de la  sección 2.3
+
+del  libro  "Análisis  Numérico  -  Burden  &  Faires  -  7ma  Edición",  (el  cual  pueden  encontrar  en
+
+biblioteca o en línea Analisis Numerico - Burden & Faires - 7ma Edición PDF | PDF)
+
+c.  Método de la secante: repita las funciones que se le asigno en el ítem anterior.
+
+d.  Resolver  los  problemas  del  12.1  al  12.4,  18.5,  18.7  y  18.8  del  libro  "métodos  numéricos  para
+
+ingenieros" de Chapra y Canale (pág. 339 y 537)
+
+Informe: Debe poseer:
+
+o
+
+o
+
+o
+
+o
+
+o
+
+Portada (con los datos de los integrantes del grupo).
+
+Introducción
+
+Contenido
+
+✓  Reseña de cada uno de los métodos (origen, autor, fundamentos y convergencia)
+
+✓  Explicación tipo manual de usuario sobre cómo realizar la ejecución de los programas
+
+presentados.
+
+✓  Resultados de las implementaciones, con capturas de pantalla de las gráficas y tablas.
+
+✓  Tabla de comandos originales del software que usó que realicen el cálculo de raíces,
+
+resolución de sistemas de ecuaciones, interpolación e integración numérica con un
+
+ejemplo de implementación (captura de pantalla) .
+
+Referencias (bibliográficas y/o electrónicas. De ser electrónicas compartir su respectivo link)
+
+Formato:    fuente  calibri  o  arial,  tamaño  12,  interlineado  1.5,  párrafos  justificados,  títulos  en
+
+negrita centrados, subtítulos en negrita justificados.
+
+3.
+
+DEFENSA (6%) (nota individual)
+
+La defensa se realizará via Meet los días 17 y 18 de julio. Deben estar todos los miembros del equipo
+
+presentes. La defensa se realizará en un horario acordado entre el grupo y el docente. Para la misma
+
+deberán preparar unas diapositivas que utilizarán como material de apoyo durante la defensa; además
+
+se mostraran durante la defensa los archivo.m  y sus corridas.
+
+Sugerencias para octave o matlab: el toolbox Simbolic , comando para graficas hold on  y hold off

@@ -3,10 +3,10 @@ from gui.gauss_simple.gauss_simple_view import GaussSimpleView
 from gui.gauss_seidel.gauss_seidel_view import GaussSeidelView
 from gui.lagrange_interpolation.lagrange_interpolation_view import LagrangeInterpolationView
 from gui.newton_interpolation.newton_interpolation_view import NewtonInterpolationView
-# -- NUEVAS IMPORTACIONES AÑADIDAS --
+from gui.bisection_method.bisection_method_view import BisectionMethodView
+from gui.trapezoidal_rule.trapezoidal_rule_view import TrapezoidalRuleView
 from gui.newton_raphson.newton_rapshon_view import NewtonRootsView
 from gui.secante.secante_view import SecantRootsView
-# -----------------------------------
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -93,7 +93,20 @@ class GaussSimpleApp(ctk.CTk):
             self.current_view = NewtonInterpolationView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
             
-        # -- NUEVOS ENRUTAMIENTOS AÑADIDOS --
+        elif view_name == "bisection_method":
+            if isinstance(self.current_view, BisectionMethodView):
+                return
+            self.current_view.destroy()
+            self.current_view = BisectionMethodView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+
+        elif view_name == "trapezoidal_rule":
+            if isinstance(self.current_view, TrapezoidalRuleView):
+                return
+            self.current_view.destroy()
+            self.current_view = TrapezoidalRuleView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+            
         elif view_name == "newton_roots":
             if isinstance(self.current_view, NewtonRootsView):
                 return

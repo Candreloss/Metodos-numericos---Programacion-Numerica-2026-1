@@ -1,0 +1,21 @@
+FUNCTION Bisect(xl, xu, es, imax, xr, iter, ea)
+    iter = 0
+    DO
+        xrold = xr
+        xr = (xl + xu)/2
+        iter = iter + 1
+        IF xr ≠ 0 THEN
+            ea = ABS((xr – xrold) / xr) * 100
+        END IF
+        test = f(xl) * f(xr)
+        IF test < 0 THEN
+            xu = xr
+        ELSE IF test > 0 THEN
+            xl = xr
+        ELSE
+            ea = 0
+        END IF
+        IF ea < es OR iter ≥ imax EXIT
+    END DO
+    Bisect = xr
+END Bisect

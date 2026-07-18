@@ -24,8 +24,7 @@ class Sidebar(ctk.CTkFrame):
         self.title_font = get_title_font()
         self.label_font = get_label_font()
         
-        # Ajustamos el peso de la fila 9 (espacio vacío) para empujar el selector de tema hacia abajo
-        self.grid_rowconfigure(9, weight=1)
+        self.grid_rowconfigure(11, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         self.create_widgets()
@@ -114,7 +113,6 @@ class Sidebar(ctk.CTkFrame):
         )
         self.btn_newton_interp.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
 
-        # --- NUEVOS MÉTODOS DE RAÍCES ---
         self.btn_newton_roots = ctk.CTkButton(
             self, 
             text="      📐   Newton (Raíces)", 
@@ -142,11 +140,38 @@ class Sidebar(ctk.CTkFrame):
             command=self.on_secant_click
         )
         self.btn_secant_roots.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
-        # --------------------------------
         
-        # Selector de Tema (Ahora en la fila 10 por el espaciado)
+        self.btn_bisection = ctk.CTkButton(
+            self, 
+            text="      📐   Bisección", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_bisection_click
+        )
+        self.btn_bisection.grid(row=9, column=0, padx=0, pady=2, sticky="ew")
+        
+        self.btn_trapecio = ctk.CTkButton(
+            self, 
+            text="      📐   Trapecio", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_trapecio_click
+        )
+        self.btn_trapecio.grid(row=10, column=0, padx=0, pady=2, sticky="ew")
+
+        # Selector de Tema
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
-        theme_frame.grid(row=10, column=0, padx=24, pady=24, sticky="ew")
+        theme_frame.grid(row=12, column=0, padx=24, pady=24, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
@@ -232,3 +257,17 @@ class Sidebar(ctk.CTkFrame):
         app = self.winfo_toplevel()
         if hasattr(app, "switch_to_view"):
             app.switch_to_view("secant_roots")
+
+    def on_bisection_click(self):
+        if self.active_method == "bisection_method":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("bisection_method")
+
+    def on_trapecio_click(self):
+        if self.active_method == "trapezoidal_rule":
+            return
+        app = self.winfo_toplevel()
+        if hasattr(app, "switch_to_view"):
+            app.switch_to_view("trapezoidal_rule")

@@ -7,8 +7,7 @@ from gui.theme import (
 
 class MatrixGrid(ctk.CTkScrollableFrame):
     """
-    Componente de UI reutilizable para el ingreso y administración
-    de la matriz aumentada [A | b] del sistema de ecuaciones.
+    Componente de UI para ingreso de matriz aumentada [A | b].
     """
     def __init__(self, master, **kwargs):
         super().__init__(
@@ -25,7 +24,6 @@ class MatrixGrid(ctk.CTkScrollableFrame):
         self.entry_b = []
         self.n_value = 3
         
-        # Configurar la columna principal para centrar el contenido
         self.grid_columnconfigure(0, weight=1)
         self.grid_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.grid_frame.grid(row=0, column=0, sticky="n")
@@ -109,14 +107,12 @@ class MatrixGrid(ctk.CTkScrollableFrame):
             self.entry_b.append(entry_b_i)
 
     def clear(self):
-        """Limpia el texto de todas las celdas."""
         for i in range(self.n_value):
             for j in range(self.n_value):
                 self.entry_A[i][j].delete(0, ctk.END)
             self.entry_b[i].delete(0, ctk.END)
 
     def load_values(self, A_vals, b_vals):
-        """Carga valores predefinidos en la matriz."""
         self.clear()
         for i in range(self.n_value):
             for j in range(self.n_value):
@@ -124,7 +120,6 @@ class MatrixGrid(ctk.CTkScrollableFrame):
             self.entry_b[i].insert(0, str(b_vals[i]))
 
     def get_data(self):
-        """Lee y valida los datos ingresados."""
         n = self.n_value
         A = []
         b = []

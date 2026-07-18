@@ -84,7 +84,6 @@ class NewtonInterpolation:
             "description": f"Datos: {n_points} puntos. Grado {n}. Evalúa en x = {self.eval_point}.",
         })
 
-        # --- Tabla de diferencias divididas ---
         table = np.zeros((n_points, n_points))
         table[:, 0] = y_data
         self.steps.append({
@@ -111,7 +110,6 @@ class NewtonInterpolation:
             "description": f"Coeficientes extraídos de la diagonal: {[f'{c:.6g}' for c in coefficients]}",
         })
 
-        # --- Evaluación numérica (Horner progresivo) ---
         result = coefficients[0]
         prod = 1.0
         eval_steps_rows = []
@@ -133,7 +131,6 @@ class NewtonInterpolation:
             "description": f"Evaluación progresiva. Resultado final: P({self.eval_point}) = {result:.6g}",
         })
 
-        # --- Polinomio simbólico ---
         x_sym = sympy.Symbol('x')
         poly_expr = coefficients[0]
         prod_sym = 1
