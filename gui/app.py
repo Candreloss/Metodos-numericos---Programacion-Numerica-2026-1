@@ -7,6 +7,7 @@ from gui.bisection_method.bisection_method_view import BisectionMethodView
 from gui.trapezoidal_rule.trapezoidal_rule_view import TrapezoidalRuleView
 from gui.newton_raphson.newton_rapshon_view import NewtonRootsView
 from gui.secante.secante_view import SecantRootsView
+from gui.simpson_rules.simpson_rules_view import ReglasSimpsonView
 from gui.theme import (
     COLOR_BG, COLOR_PANEL, COLOR_BORDER, COLOR_INTERACTIVE_BORDER,
     COLOR_ACCENT, COLOR_ACCENT_HOVER, COLOR_LIGHT_CYAN, COLOR_TEXT, COLOR_MUTED,
@@ -39,7 +40,10 @@ class GaussSimpleApp(ctk.CTk):
         self.geometry(f"{width}x{height}+{x}+{y}")
         self.minsize(1000, 650)
         self.configure(fg_color=COLOR_BG)
-        
+
+        # Cierre limpio: evita bgerrors de callbacks pendientes de tk after()
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
+
         # Obtener tipografías
         self.title_font = get_title_font()
         self.section_font = get_section_font()
@@ -120,3 +124,14 @@ class GaussSimpleApp(ctk.CTk):
             self.current_view.destroy()
             self.current_view = SecantRootsView(self.main_container)
             self.current_view.grid(row=0, column=0, sticky="nsew")
+
+        elif view_name == "simpson_rules":
+            if isinstance(self.current_view, ReglasSimpsonView):
+                return
+            self.current_view.destroy()
+            self.current_view = ReglasSimpsonView(self.main_container)
+            self.current_view.grid(row=0, column=0, sticky="nsew")
+
+    def _on_close(self):
+        self.quit()
+        self.destroy()
