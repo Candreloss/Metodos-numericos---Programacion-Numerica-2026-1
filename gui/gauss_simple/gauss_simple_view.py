@@ -55,23 +55,26 @@ class GaussSimpleView(ctk.CTkFrame):
         
         content_frame = ctk.CTkFrame(self.view_container, fg_color="transparent")
         content_frame.grid(row=1, column=0, sticky="nsew")
+        content_frame.grid_columnconfigure(0, weight=1)
+        content_frame.grid_columnconfigure(1, weight=1)
+        content_frame.grid_rowconfigure(0, weight=1)
         
         self.left_panel = ctk.CTkFrame(content_frame, fg_color=COLOR_PANEL, border_color=COLOR_BORDER, border_width=1, corner_radius=12)
         self.left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 12), pady=0)
         self.left_panel.grid_columnconfigure(0, weight=1)
-        self.left_panel.grid_rowconfigure(2, weight=1) # El área de la matriz se expande
+        self.left_panel.grid_rowconfigure(3, weight=1) # El área de la matriz se expande
         
         config_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
-        config_frame.grid(row=0, column=0, sticky="ew", padx=20, pady=20)
-        config_frame.grid_columnconfigure(1, weight=1)
-        config_frame.grid_columnconfigure(3, weight=1)
+        config_frame.grid(row=0, column=0, sticky="ew", padx=15, pady=(15, 10))
+        config_frame.grid_columnconfigure((1, 3, 5), weight=1)
+        
         n_label = ctk.CTkLabel(config_frame, text="Dimensión (n):", font=self.label_font, text_color=COLOR_TEXT)
-        n_label.grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 10))
+        n_label.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 10))
         
         self.n_combo = ctk.CTkComboBox(
             config_frame, 
             values=["2", "3", "4", "5", "6", "7"], 
-            width=120,
+            width=70,
             command=self.on_n_changed,
             fg_color=COLOR_BG,
             border_color=COLOR_INTERACTIVE_BORDER,
@@ -85,15 +88,15 @@ class GaussSimpleView(ctk.CTkFrame):
             corner_radius=8
         )
         self.n_combo.set("3")
-        self.n_combo.grid(row=0, column=1, sticky="ew", padx=(0, 20), pady=(0, 10))
+        self.n_combo.grid(row=0, column=1, sticky="ew", padx=(0, 10), pady=(0, 10))
         
         dec_label = ctk.CTkLabel(config_frame, text="Decimales:", font=self.label_font, text_color=COLOR_TEXT)
-        dec_label.grid(row=0, column=2, sticky="w", padx=(0, 8), pady=(0, 10))
+        dec_label.grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 10))
         
         self.dec_combo = ctk.CTkComboBox(
             config_frame, 
             values=["2", "4", "6", "8"], 
-            width=120,
+            width=70,
             fg_color=COLOR_BG,
             border_color=COLOR_INTERACTIVE_BORDER,
             button_color=COLOR_INTERACTIVE_BORDER,
@@ -106,15 +109,15 @@ class GaussSimpleView(ctk.CTkFrame):
             corner_radius=8
         )
         self.dec_combo.set("4")
-        self.dec_combo.grid(row=0, column=3, sticky="ew", pady=(0, 10))
+        self.dec_combo.grid(row=0, column=3, sticky="ew", padx=(0, 10), pady=(0, 10))
         
         preset_label = ctk.CTkLabel(config_frame, text="Ejemplos:", font=self.label_font, text_color=COLOR_TEXT)
-        preset_label.grid(row=1, column=0, sticky="w", padx=(0, 8), pady=(0, 10))
+        preset_label.grid(row=0, column=4, sticky="w", padx=(0, 5), pady=(0, 10))
         
         self.preset_combo = ctk.CTkComboBox(
             config_frame, 
             values=["Ejemplo Chapra (3x3)", "Requiere Pivoteo (3x3)", "Sistema Pequeño (2x2)", "Sistema Grande (5x5)"],
-            width=260, 
+            width=130, 
             command=self.on_preset_selected,
             fg_color=COLOR_BG,
             border_color=COLOR_INTERACTIVE_BORDER,
@@ -128,7 +131,7 @@ class GaussSimpleView(ctk.CTkFrame):
             corner_radius=8
         )
         self.preset_combo.set("Ejemplo Chapra (3x3)")
-        self.preset_combo.grid(row=1, column=1, columnspan=3, sticky="ew", pady=(0, 10))
+        self.preset_combo.grid(row=0, column=5, sticky="ew", pady=(0, 10))
         
         self.pivot_var = ctk.BooleanVar(value=True)
         self.pivot_switch = ctk.CTkSwitch(
@@ -142,16 +145,20 @@ class GaussSimpleView(ctk.CTkFrame):
             text_color=COLOR_TEXT,
             font=self.label_font
         )
-        self.pivot_switch.grid(row=2, column=0, columnspan=4, sticky="w", pady=(5, 0))
+        self.pivot_switch.grid(row=1, column=0, columnspan=6, sticky="w", pady=(5, 0))
+        
+        sep = ctk.CTkFrame(self.left_panel, height=1, fg_color=COLOR_BORDER)
+        sep.grid(row=1, column=0, sticky="ew", padx=15, pady=(5, 10))
         
         matrix_header = ctk.CTkLabel(self.left_panel, text="Ingrese los coeficientes del sistema [A | b]:", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
-        matrix_header.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 8))
+        matrix_header.grid(row=2, column=0, sticky="w", padx=15, pady=(5, 8))
         
         self.matrix_grid = MatrixGrid(self.left_panel)
-        self.matrix_grid.grid(row=3, column=0, sticky="nsew", padx=(10, 10), pady=(0, 20))
+        self.matrix_grid.grid(row=3, column=0, sticky="nsew", padx=15, pady=(0, 15))
+        self.matrix_grid.configure(height=260)
         
         actions_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
-        actions_frame.grid(row=4, column=0, sticky="ew", padx=20, pady=20)
+        actions_frame.grid(row=4, column=0, sticky="ew", padx=15, pady=(5, 15))
         actions_frame.grid_columnconfigure(0, weight=1)
         actions_frame.grid_columnconfigure(1, weight=1)
         
@@ -213,7 +220,15 @@ class GaussSimpleView(ctk.CTkFrame):
         self.tab_solution.grid_columnconfigure(0, weight=1)
         self.tab_solution.grid_rowconfigure(1, weight=1)
         
-        lbl = ctk.CTkLabel(self.tab_solution, text="Vector Solución Obtenido", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
+        lbl = ctk.CTkLabel(
+            self.tab_solution, 
+            text="Vector Solución Obtenido", 
+            font=self.section_font, 
+            text_color=COLOR_LIGHT_CYAN,
+            anchor="w",
+            justify="left",
+            wraplength=380
+        )
         lbl.grid(row=0, column=0, sticky="w", padx=10, pady=10)
         
         self.txt_solution = ctk.CTkTextbox(
@@ -224,6 +239,7 @@ class GaussSimpleView(ctk.CTkFrame):
             border_color=COLOR_BORDER, 
             border_width=1,
             corner_radius=8,
+            wrap="none",
             scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
             scrollbar_button_hover_color=COLOR_ACCENT
         )
@@ -235,7 +251,15 @@ class GaussSimpleView(ctk.CTkFrame):
         self.tab_steps.grid_columnconfigure(0, weight=1)
         self.tab_steps.grid_rowconfigure(1, weight=1)
         
-        lbl = ctk.CTkLabel(self.tab_steps, text="Detalle de Operaciones de Eliminación", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
+        lbl = ctk.CTkLabel(
+            self.tab_steps, 
+            text="Detalle de Operaciones de Eliminación", 
+            font=self.section_font, 
+            text_color=COLOR_LIGHT_CYAN,
+            anchor="w",
+            justify="left",
+            wraplength=380
+        )
         lbl.grid(row=0, column=0, sticky="w", padx=10, pady=10)
         
         self.txt_steps = ctk.CTkTextbox(
@@ -246,6 +270,7 @@ class GaussSimpleView(ctk.CTkFrame):
             border_color=COLOR_BORDER, 
             border_width=1,
             corner_radius=8,
+            wrap="none",
             scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
             scrollbar_button_hover_color=COLOR_ACCENT
         )
@@ -257,7 +282,15 @@ class GaussSimpleView(ctk.CTkFrame):
         self.tab_validation.grid_columnconfigure(0, weight=1)
         self.tab_validation.grid_rowconfigure(1, weight=1)
         
-        lbl = ctk.CTkLabel(self.tab_validation, text="Verificación Matemática: A · x = b", font=self.section_font, text_color=COLOR_LIGHT_CYAN)
+        lbl = ctk.CTkLabel(
+            self.tab_validation, 
+            text="Verificación Matemática: A · x = b", 
+            font=self.section_font, 
+            text_color=COLOR_LIGHT_CYAN,
+            anchor="w",
+            justify="left",
+            wraplength=380
+        )
         lbl.grid(row=0, column=0, sticky="w", padx=10, pady=10)
         
         self.txt_validation = ctk.CTkTextbox(
@@ -268,6 +301,7 @@ class GaussSimpleView(ctk.CTkFrame):
             border_color=COLOR_BORDER, 
             border_width=1,
             corner_radius=8,
+            wrap="none",
             scrollbar_button_color=COLOR_INTERACTIVE_BORDER,
             scrollbar_button_hover_color=COLOR_ACCENT
         )

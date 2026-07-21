@@ -28,8 +28,8 @@ class GaussSimpleApp(ctk.CTk):
         # Configurar ventana principal y centrado en pantalla
         self.title("Métodos Numéricos")
         
-        width = 1250
-        height = 650
+        width = 1300
+        height = 800
         
         # Calcular posición central basada en las dimensiones de la pantalla
         screen_width = self.winfo_screenwidth()
