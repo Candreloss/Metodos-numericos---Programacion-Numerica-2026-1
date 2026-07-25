@@ -24,7 +24,7 @@ class Sidebar(ctk.CTkFrame):
         self.title_font = get_title_font()
         self.label_font = get_label_font()
         
-        self.grid_rowconfigure(12, weight=1)
+        self.grid_rowconfigure(16, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
         self.create_widgets()
@@ -39,79 +39,24 @@ class Sidebar(ctk.CTkFrame):
             justify="center",
             anchor="center"
         )
-        title_label.grid(row=0, column=0, padx=24, pady=(35, 25), sticky="ew")
+        title_label.grid(row=0, column=0, padx=24, pady=(10, 3), sticky="ew")
         
         # Separador muy delgado
         sep = ctk.CTkFrame(self, height=1, fg_color=COLOR_BORDER)
         sep.grid(row=1, column=0, sticky="ew", padx=24, pady=0)
         
-        # Sección de selección de métodos
-        method_title = ctk.CTkLabel(
-            self, 
-            text="MÉTODOS", 
-            font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
-            text_color=COLOR_MUTED
-        )
-        method_title.grid(row=2, column=0, padx=24, pady=(25, 12), sticky="w")
+
         
         # Menú de Métodos (Botones expandidos de borde a borde, con corner_radius=0 y altura de 44px)
         sidebar_font = ctk.CTkFont(family="Inter", size=13, weight="bold")
         
-        self.btn_gauss_simple = ctk.CTkButton(
+        method_title = ctk.CTkLabel(
             self, 
-            text="      📊   Gauss Simple", 
-            fg_color="transparent", 
-            text_color=COLOR_TEXT,
-            hover_color=COLOR_INTERACTIVE_BORDER,
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w",
-            command=self.on_gauss_simple_click
+            text="Calculo de raíces", 
+            font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
+            text_color=COLOR_MUTED
         )
-        self.btn_gauss_simple.grid(row=3, column=0, padx=0, pady=2, sticky="ew")
-        
-        self.btn_gauss_seidel = ctk.CTkButton(
-            self, 
-            text="      📊   Gauss-Seidel", 
-            fg_color="transparent", 
-            text_color=COLOR_TEXT,
-            hover_color=COLOR_INTERACTIVE_BORDER,
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w",
-            command=self.on_gauss_seidel_click
-        )
-        self.btn_gauss_seidel.grid(row=4, column=0, padx=0, pady=2, sticky="ew")
-        
-        self.btn_lagrange = ctk.CTkButton(
-            self, 
-            text="      📈   Lagrange", 
-            fg_color="transparent", 
-            text_color=COLOR_TEXT,
-            hover_color=COLOR_INTERACTIVE_BORDER,
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w",
-            command=self.on_lagrange_click
-        )
-        self.btn_lagrange.grid(row=5, column=0, padx=0, pady=2, sticky="ew")
-        
-        self.btn_newton_interp = ctk.CTkButton(
-            self, 
-            text="      📈   Newton (Interp.)", 
-            fg_color="transparent", 
-            text_color=COLOR_TEXT,
-            hover_color=COLOR_INTERACTIVE_BORDER,
-            font=sidebar_font,
-            corner_radius=0,
-            height=44,
-            anchor="w",
-            command=self.on_newton_interp_click
-        )
-        self.btn_newton_interp.grid(row=6, column=0, padx=0, pady=2, sticky="ew")
+        method_title.grid(row=3, column=0, padx=24, pady=(0), sticky="w")
 
         self.btn_newton_roots = ctk.CTkButton(
             self, 
@@ -125,7 +70,7 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_newton_roots_click
         )
-        self.btn_newton_roots.grid(row=7, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_newton_roots.grid(row=4, column=0, padx=0, pady=0, sticky="ew")
 
         self.btn_secant_roots = ctk.CTkButton(
             self, 
@@ -139,11 +84,11 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_secant_click
         )
-        self.btn_secant_roots.grid(row=8, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_secant_roots.grid(row=5, column=0, padx=0, pady=0, sticky="ew")
         
         self.btn_bisection = ctk.CTkButton(
             self, 
-            text="      📐   Bisección", 
+            text="      📐   Bisección (Raíces)", 
             fg_color="transparent", 
             text_color=COLOR_TEXT,
             hover_color=COLOR_INTERACTIVE_BORDER,
@@ -153,7 +98,81 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_bisection_click
         )
-        self.btn_bisection.grid(row=9, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_bisection.grid(row=6, column=0, padx=0, pady=0, sticky="ew")
+
+        method_title = ctk.CTkLabel(
+            self, 
+            text="Sistemas de Ecuaciones", 
+            font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
+            text_color=COLOR_MUTED
+        )
+        method_title.grid(row=7, column=0, padx=24, pady=(0, 0), sticky="w")
+
+        self.btn_gauss_simple = ctk.CTkButton(
+            self, 
+            text="      📊   Gauss Simple", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_gauss_simple_click
+        )
+        self.btn_gauss_simple.grid(row=8, column=0, padx=0, pady=0, sticky="ew")
+        
+        self.btn_gauss_seidel = ctk.CTkButton(
+            self, 
+            text="      📊   Gauss-Seidel", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_gauss_seidel_click
+        )
+        self.btn_gauss_seidel.grid(row=9, column=0, padx=0, pady=0, sticky="ew")
+        
+        method_title = ctk.CTkLabel(
+            self, 
+            text="Interpolación e Integración", 
+            font=ctk.CTkFont(family="Inter", size=11, weight="bold"), 
+            text_color=COLOR_MUTED
+        )
+        method_title.grid(row=10, column=0, padx=24, pady=(0, 0), sticky="w")
+
+        self.btn_lagrange = ctk.CTkButton(
+            self, 
+            text="      📈   Lagrange", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_lagrange_click
+        )
+        self.btn_lagrange.grid(row=11, column=0, padx=0, pady=0, sticky="ew")
+        
+        self.btn_newton_interp = ctk.CTkButton(
+            self, 
+            text="      📈   Newton (Interp.)", 
+            fg_color="transparent", 
+            text_color=COLOR_TEXT,
+            hover_color=COLOR_INTERACTIVE_BORDER,
+            font=sidebar_font,
+            corner_radius=0,
+            height=44,
+            anchor="w",
+            command=self.on_newton_interp_click
+        )
+        self.btn_newton_interp.grid(row=12, column=0, padx=0, pady=0, sticky="ew")
+
+
         
         self.btn_trapecio = ctk.CTkButton(
             self, 
@@ -167,7 +186,7 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_trapecio_click
         )
-        self.btn_trapecio.grid(row=10, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_trapecio.grid(row=13, column=0, padx=0, pady=0, sticky="ew")
 
         self.btn_simpson = ctk.CTkButton(
             self,
@@ -181,11 +200,11 @@ class Sidebar(ctk.CTkFrame):
             anchor="w",
             command=self.on_simpson_click
         )
-        self.btn_simpson.grid(row=11, column=0, padx=0, pady=2, sticky="ew")
+        self.btn_simpson.grid(row=14, column=0, padx=0, pady=0, sticky="ew")
 
         # Selector de Tema
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
-        theme_frame.grid(row=13, column=0, padx=24, pady=24, sticky="ew")
+        theme_frame.grid(row=15, column=0, padx=24, pady=0, sticky="ew")
         
         theme_lbl = ctk.CTkLabel(
             theme_frame, 
@@ -193,7 +212,7 @@ class Sidebar(ctk.CTkFrame):
             font=sidebar_font, 
             text_color=COLOR_TEXT
         )
-        theme_lbl.pack(anchor="w", pady=(0, 10))
+        theme_lbl.pack(anchor="w", pady=(20, 0))
         
         self.theme_menu = ctk.CTkOptionMenu(
             theme_frame,
